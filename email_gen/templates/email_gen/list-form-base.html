@@ -1,0 +1,78 @@
+{% extends 'template.html' %}
+
+{% block content %}
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-2 text-gray-800">
+                {{ file.display_name }}
+            </h1>
+            <span class="badge badge-primary">
+                {% if file.update_date.date %}
+                    {{ file.update_date.date }}
+                {% else %}
+                    {{ file.upload_date }}
+                {% endif %}
+            </span>
+            <small> - UPLOADED</small>
+        </div>
+    </div>
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col p-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text">
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+                        <form action="{% url 'download_form' file.list_type %}" method="POST" id="download-form">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group {% if form.file_name.errors %}'is-invalid'{% endif %}">
+                                        <label for="{{ form.file_name.id_for_label }}">File Name</label>
+                                        {{ form.file_name }}
+                                    </div>
+                                    {% if form.file_name.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.file_name.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group {% if form.email_domains.errors %}'is-invalid'{% endif %}">
+                                        <label for="{{ form.email_domains.id_for_label }}">Email Domains</label>
+                                        {{ form.email_domains }}
+                                    </div>
+                                    {% if form.email_domains.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.email_domains.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-3 d-flex align-items-end pb-4">
+                                    <div class="form-check">
+                                        {{ form.email_domains_inclusive }}
+                                        <label for="{{ form.email_domains_inclusive.id_for_label }}"
+                                               class="form-check-label">Inclusive</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if file.list_type == 'retx' %}
+                                {% include 'email_gen/download-retx.html' %}
+                            {% elif file.list_type == 'aptx' %}
+                                {% include 'email_gen/download-aptx.html' %}
+                            {% endif %}
+                            <input class="btn btn-primary" type="submit" value="Submit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

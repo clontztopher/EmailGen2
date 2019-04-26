@@ -1,0 +1,36 @@
+{% extends 'template.html' %}
+
+{% block content %}
+
+    <!-- Content Row -->
+    <div class="row">
+
+        <!-- Content Column -->
+        <div class="col mb-4">
+
+            <!-- Project Card Example -->
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Upload File</h6>
+                </div>
+                <div class="card-body">
+                    <form enctype="multipart/form-data" action="/upload/" method="POST" id="upload-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.type.label_tag }}
+                            {{ form.type }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.file.label_tag }}
+                            {{ form.file }}
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+{% endblock content %}

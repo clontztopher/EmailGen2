@@ -1,0 +1,11 @@
+#content-wrapper {
+    max-width: 860px;
+}
+
+html, body {
+    background: #2d3035;
+}
+
+.fa-minus-square:hover {
+    cursor: pointer;
+}

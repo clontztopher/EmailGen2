@@ -1,0 +1,29 @@
+{% if file_list %}
+    {% for file in file_list %}
+        <div class="col-md-6 mb-4">
+            <a href="{% url 'download_form' file.list_type %}">
+                <div class="card border-left-primary shadow h-100 py-2 list-card">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    {% if file.update_date %}
+                                        {{ file.update_date }}
+                                    {% else %}
+                                        {{ file.upload_date }}
+                                    {% endif %}
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ file.display_name }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-envelope fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+{% endif %}
