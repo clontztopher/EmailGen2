@@ -1,12 +1,10 @@
-import csv
+import pandas as pd
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse
+
 from email_gen.forms.get_form_for import get_form_for
 from email_gen.forms.upload.upload import SourceListUploadForm
 from .models.source import SourceListFileModel
-from nameparser import HumanName
-import pandas as pd
-
 from .operations.validator import make_processor
 
 
@@ -29,13 +27,6 @@ def delete(request, file_id):
     instance = SourceListFileModel.objects.get(pk=file_id)
     instance.delete()
     return HttpResponseRedirect(redirect_to='/')
-
-
-# def add_name_to_line(line: list):
-#     name = HumanName(line[2])
-#     name.capitalize(force=True)
-#     line.extend([name.first, name.middle, name.last])
-#     return line
 
 
 def download_form(request, file_type: str):
