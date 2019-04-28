@@ -1,5 +1,5 @@
 from django import forms
-from ...constants import TREC_COUNTY_CODES, TREC_COUNTY_CODES_BY_REGION
+from ...constants import TREC_COUNTY_CODES_BY_REGION
 
 
 class SourceListFilterForm(forms.Form):
@@ -15,7 +15,7 @@ class SourceListFilterForm(forms.Form):
     def get_data(self, post_data):
         data = self.cleaned_data
 
-        email_domains = post_data.get('email_domains', False)
+        email_domains = post_data.get('email_domains')
 
         if email_domains:
             data['email_domains'] = [d.strip() for d in email_domains.split(',')]
@@ -23,7 +23,7 @@ class SourceListFilterForm(forms.Form):
         data['exp_dates'] = [d for n, d in post_data.items() if 'exp_indie_date' in n]
 
         counties = data.get('counties', [])
-        regions = data.get('regions', [])
+        regions = data.get('regions')
 
         if regions:
             for region in regions:
