@@ -60,7 +60,13 @@ class SourceListFileModel(models.Model):
             config = ReTxConfig
 
         instance.config = config
+        instance.file_exists = cls.file_exists_for(instance)
+
         return instance
+
+    @classmethod
+    def file_exists_for(cls, instance):
+        return os.path.isfile(instance.file.path)
 
     def __str__(self):
         date = self.update_date if self.update_date else self.upload_date

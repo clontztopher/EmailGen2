@@ -17,6 +17,14 @@
             <small> - UPLOADED</small>
         </div>
     </div>
+    {% if not file.file_exists %}
+        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+            <p class="mb-0">
+                No file associated with this list. Please upload a list to continue.
+            </p>
+            <a href="/upload/{{ file.list_type }}/" class="btn btn-warning btn-sm">Upload List</a>
+        </div>
+    {% endif %}
     <!-- Content Row -->
     <div class="row">
         <div class="col p-3">
@@ -68,7 +76,7 @@
                             {% elif file.list_type == 'aptx' %}
                                 {% include 'email_gen/download-aptx.html' %}
                             {% endif %}
-                            <input class="btn btn-primary" type="submit" value="Submit">
+                            <input class="btn btn-primary" type="submit" value="Submit" {% if not file.file_exists %}disabled{% endif %}>
                         </form>
                     </div>
                 </div>

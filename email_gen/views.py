@@ -1,6 +1,6 @@
 import pandas as pd
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404
 
 from email_gen.forms.get_form_for import get_form_for
 from email_gen.forms.upload.upload import SourceListUploadForm
@@ -13,14 +13,15 @@ def index(request):
     return render(request, 'index.html', {'file_list': file_list})
 
 
-def upload(request):
+def upload(request, file_type='retx'):
+    instance = None
     if request.method == 'POST':
         form = SourceListUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            SourceListFileModel.save_file(request.POST['type'], request.FILES['file'])
+            instance = SourceListFileModel.save_file(request.POST['type'], request.FILES['file'])
 
-    form = SourceListUploadForm()
-    return render(request, 'email_gen/upload-form.html', {'form': form})
+    form = SourceListUploadForm(initial={'type': file_type})
+    return render(request, 'email_gen/upload-form.html', {'form': form, 'instance': instance})
 
 
 def delete(request, file_id):
@@ -30,7 +31,11 @@ def delete(request, file_id):
 
 
 def download_form(request, file_type: str):
-    file_instance = SourceListFileModel.get_instance(file_type)
+    try:
+        file_instance = SourceListFileModel.get_instance(file_type)
+    except:
+        raise Http404("No list was found, please upload one or choose from the ones available.")
+
     form = get_form_for(file_type)
 
     if request.method == 'POST':
