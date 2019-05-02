@@ -20,7 +20,7 @@ class SourceListFilterForm(forms.Form):
         if email_domains:
             data['email_domains'] = [d.strip() for d in email_domains.split(',')]
 
-        data['exp_dates'] = [d for n, d in post_data.items() if 'exp_indie_date' in n]
+        data['exp_dates'] = [d for n, d in post_data.items() if 'exp_indie_date' in n and d is not '']
 
         counties = data.get('counties', [])
         regions = data.get('regions')

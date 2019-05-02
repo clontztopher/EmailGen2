@@ -31,10 +31,7 @@ def delete(request, file_id):
 
 
 def download_form(request, file_type: str):
-    try:
-        file_instance = SourceListFileModel.get_instance(file_type)
-    except:
-        raise Http404("No list was found, please upload one or choose from the ones available.")
+    file_instance = SourceListFileModel.get_instance(file_type)
 
     form = get_form_for(file_type)
 
@@ -45,7 +42,7 @@ def download_form(request, file_type: str):
             download_file_name = loaded_form.cleaned_data['file_name']
 
             opts = file_instance.config.get_reader_opts()
-            file_reader = pd.read_csv(file_instance.file.path, **opts)
+            file_reader = pd.read_csv('gs://eg-source-files/' + file_instance.file_name, **opts)
             process = make_processor(file_type, loaded_form.get_data(request.POST))
 
             response = HttpResponse(content_type='text/csv')

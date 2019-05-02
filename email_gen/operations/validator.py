@@ -1,7 +1,6 @@
 import re
 import datetime
 import pandas as pd
-from ..constants import TREC_COUNTY_CODES_BY_REGION, TREC_COUNTY_CODES
 
 
 def make_search(checklist):
