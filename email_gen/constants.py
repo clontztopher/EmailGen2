@@ -1,7 +1,8 @@
-ITEMS = 'items'
-EMAIL_DOMAINS = 'email_domains'
-DOMAINS = 'domains'
-INCLUSIVE = 'inclusive'
+"""
+---------------------
+    TREC CONSTANTS
+---------------------
+"""
 
 # County Codes field based on TREC/TALCB counties
 # https://www.trec.texas.gov/sites/default/files/high-value-data-sets/county.txt
@@ -286,3 +287,54 @@ TREC_COUNTY_CODES_BY_REGION = {
               "226", "228", "229", "230", "231", "233", "234", "238", "240", "241", "242", "245", "248", "250",
               "251", "253"]
 }
+
+TREC_LIC_STATUS = [
+    ('20', 'Current and Active'),
+    ('21', 'Current and Inactive'),
+    ('30', 'Probation and Active'),
+    ('31', 'Probation and Inactive'),
+    ('45', 'Expired'),
+    ('47', 'Suspended'),
+    ('56', 'Relinquished'),
+    ('57', 'Revoked'),
+    ('80', 'Deceased')
+]
+
+TREC_LIC_TYPES = [
+    ('SALE', 'Sales Agent'),
+    ('BRK', 'Individual Broker'),
+    ('BLLC', 'Limited Liability Corporation Broker'),
+    ('BCRP', 'Corporation Broker'),
+    ('6', 'Partnership Broker'),
+    ('REB', 'Broker Organization Branch'),
+    ('PRIN', 'Professional Inspector'),
+    ('REIN', 'Real Estate Inspector'),
+    ('APIN', 'Apprentice Inspector'),
+    ('ILLC', 'Professional Inspector, LLC'),
+    ('ICRP', 'Professional Inspector, Corporation'),
+    ('ERWI', 'Easement and Right-of-Way, Individual'),
+    ('ERWO', 'Easement and Right-of-Way, Business')
+]
+
+TREC_ED_STATUS = [
+    ('0', 'No Non-elective CE Requirement'),
+    ('1', 'Non-elective CE Requirements Outstanding'),
+    ('2', 'Non-elective CE Requirements Met')
+]
+
+TREC_MCE_STATUS = [
+    ('0', 'No MCE Requirement'),
+    ('1', 'MCE Requirements Outstanding'),
+    ('2', 'MCE Requirements Met')
+]
+
+APTX_LIC_STATUS = TREC_LIC_STATUS
+
+APTX_LIC_TYPES = [
+    ('APCR', 'Certified Residential Appraiser'),
+    ('APGN', 'Certified General Appraiser'),
+    ('APOS', 'Temporary Out of State Appraiser'),
+    ('APPV', 'Provisional Licensed Appraiser'),
+    ('APSC', 'Licensed Residential Appraiser'),
+    ('APTR', 'Appraiser Trainee')
+]

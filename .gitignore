@@ -6,6 +6,7 @@ db.sqlite3
 app.yaml
 csre-email-gen-8175ced2501a.json
 cloud_sql_proxy
+**.csv
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

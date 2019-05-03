@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models.source import SourceListFileModel
+from .models.models_aptx import AppraiserTexasListModel
 
-admin.site.register(SourceListFileModel)
+admin.site.register(AppraiserTexasListModel)

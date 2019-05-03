@@ -1,5 +1,5 @@
 from django import forms
-from ...constants import TREC_COUNTY_CODES_BY_REGION
+from ..constants import TREC_COUNTY_CODES_BY_REGION
 
 
 class SourceListFilterForm(forms.Form):
