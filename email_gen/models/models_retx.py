@@ -17,8 +17,8 @@ class RealEstateTexasListModel(models.Model):
         return dict(
             sep='\t',
             header=None,
-            names=cls.HEADERS,
-            dtype={header: str for header in cls.HEADERS},
+            names=cls.FILE_HEADERS,
+            dtype={header: str for header in cls.FILE_HEADERS},
             chunksize=100000,
             encoding='latin',
             parse_dates=[5, 6],
@@ -35,21 +35,21 @@ class RealEstateAgentTexasModel(models.Model):
     lic_type = models.CharField(max_length=4, choices=TREC_LIC_TYPES)
     lic_num = models.PositiveIntegerField()
     full_name = models.CharField(max_length=40)
-    suffix = models.CharField(max_length=10, blank=True)
+    suffix = models.CharField(max_length=10, blank=True, null=True)
     lic_status = models.PositiveSmallIntegerField(choices=TREC_LIC_STATUS)
     lic_date = models.DateField()
     exp_date = models.DateField()
     ed_status = models.CharField(max_length=3, choices=TREC_ED_STATUS)
     mce_status = models.CharField(max_length=3, choices=TREC_MCE_STATUS)
     des_supervisor = models.CharField(max_length=3)
-    phone = models.CharField(max_length=20, blank=True)
-    email = models.EmailField(blank=True)
-    mail_1 = models.CharField(max_length=60, blank=True)
-    mail_2 = models.CharField(max_length=60, blank=True)
-    mail_3 = models.CharField(max_length=60, blank=True)
-    mail_city = models.CharField(max_length=60, blank=True)
-    mail_state = models.CharField(max_length=4, blank=True)
-    mail_zip = models.CharField(max_length=12, blank=True)
-    mail_county = models.CharField(max_length=3, blank=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    mail_1 = models.CharField(max_length=60, blank=True, null=True)
+    mail_2 = models.CharField(max_length=60, blank=True, null=True)
+    mail_3 = models.CharField(max_length=60, blank=True, null=True)
+    mail_city = models.CharField(max_length=60, blank=True, null=True)
+    mail_state = models.CharField(max_length=4, blank=True, null=True)
+    mail_zip = models.CharField(max_length=12, blank=True, null=True)
+    mail_county = models.CharField(max_length=3, blank=True, null=True)
 
     source_list = models.ForeignKey(RealEstateTexasListModel, on_delete=models.CASCADE, related_name='entities')

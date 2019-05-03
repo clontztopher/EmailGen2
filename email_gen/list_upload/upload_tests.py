@@ -9,7 +9,7 @@ class UploadTests(TestCase):
 
     def test_save_list(self):
         aptx_list_model, aptx_entity_model = get_models('aptx')
-        with open('email_gen/tests/test-apprfile.txt', 'rb') as f:
+        with open('email_gen/list_download/download_tests/test-apprfile.txt', 'rb') as f:
             test_file = File(f)
             list_instance = save_list(list_type='aptx', file=test_file)
             entities = list_instance.entities.all()[:10]

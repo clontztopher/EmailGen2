@@ -12,10 +12,14 @@ def save_list(list_type, file):
 
     list_instance.save()
 
+    # "Truncate" table before entering new from list
+    entity_model.objects.all().delete()
+
     opts = list_model.get_reader_opts()
     reader = pd.read_csv(file, **opts)
 
     for chunk in reader:
+        chunk.fillna('')
         entities = []
 
         for entity in chunk.itertuples():
