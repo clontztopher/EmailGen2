@@ -7,10 +7,9 @@ class RealEstateTexasListModel(models.Model):
                     'ed_status', 'mce_status', 'des_supervisor', 'phone', 'email', 'mail_1', 'mail_2', 'mail_3',
                     'mail_city', 'mail_state', 'mail_zip', 'mail_county']
 
-    list_type = models.CharField(max_length=4, default='aptx', editable=False)
-    display_name = models.CharField(max_length=30, default='Appraisal - Texas', editable=False)
-    upload_date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now=True)
+    list_type = models.CharField(max_length=4, default='retx', editable=False)
+    display_name = models.CharField(max_length=30, default='Real Estate - Texas', editable=False)
+    update_date = models.DateTimeField()
 
     @classmethod
     def get_reader_opts(cls):
@@ -21,14 +20,11 @@ class RealEstateTexasListModel(models.Model):
             dtype={header: str for header in cls.FILE_HEADERS},
             chunksize=100000,
             encoding='latin',
-            parse_dates=[5, 6],
-            index_col=1,
             usecols=range(19)
         )
 
     def __str__(self):
-        date = self.update_date if self.update_date else self.upload_date
-        return self.display_name + ", Updated - " + date.strftime('%c')
+        return "%s - %s" % (self.display_name, self.update_date.strftime('%c'))
 
 
 class RealEstateAgentTexasModel(models.Model):

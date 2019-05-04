@@ -1,5 +1,5 @@
 import pandas as pd
-
+from django.utils import timezone
 from ..models.model_utils import get_models
 
 
@@ -10,6 +10,7 @@ def save_list(list_type, file):
     except:
         list_instance = list_model()
 
+    list_instance.update_date = timezone.now()
     list_instance.save()
 
     # "Truncate" table before entering new from list
@@ -19,7 +20,7 @@ def save_list(list_type, file):
     reader = pd.read_csv(file, **opts)
 
     for chunk in reader:
-        chunk.fillna('')
+        chunk = chunk.fillna('')
         entities = []
 
         for entity in chunk.itertuples():

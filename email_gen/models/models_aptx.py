@@ -9,8 +9,7 @@ class AppraiserTexasListModel(models.Model):
 
     list_type = models.CharField(max_length=4, default='aptx', editable=False)
     display_name = models.CharField(max_length=30, default='Appraisal - Texas', editable=False)
-    upload_date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now=True)
+    update_date = models.DateTimeField()
 
     @classmethod
     def get_reader_opts(cls):
@@ -25,8 +24,7 @@ class AppraiserTexasListModel(models.Model):
         )
 
     def __str__(self):
-        date = self.update_date if self.update_date else self.upload_date
-        return self.display_name + ", Updated - " + date.strftime('%c')
+        return "%s - %s" % (self.display_name, self.update_date.strftime('%c'))
 
 
 class AppraiserTexasModel(models.Model):

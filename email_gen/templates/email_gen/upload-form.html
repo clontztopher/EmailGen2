@@ -7,14 +7,16 @@
 
         <!-- Content Column -->
         <div class="col mb-4">
-            {% if not instance == None %}
-                <div class="alert alert-success d-flex justify-content-between align-items-center">
-                    <p class="mb-0">
-                        File upload successful.
-                    </p>
-                    <a href="/download/{{ instance.list_type }}/" class="btn btn-success btn-sm">Go to {{ instance.display_name }}</a>
-                </div>
-            {% endif %}
+            {# if not instance == None #}
+            {#                <div class="alert alert-success d-flex justify-content-between align-items-center">#}
+            {#                    <p class="mb-0">#}
+            {#                        File upload successful.#}
+            {#                    </p>#}
+            {#                    <a href="/download/{{ instance.list_type }}/" class="btn btn-success btn-sm">#}
+            {#                        Go to {{ instance.display_name }}#}
+            {#                    </a>#}
+            {#                </div>#}
+            {# endif #}
             <!-- Project Card Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -23,10 +25,10 @@
                 <div class="card-body">
                     <form enctype="multipart/form-data" action="/upload/" method="POST" id="upload-form">
                         {% csrf_token %}
-                        <div class="form-group">
-                            {{ form.type.label_tag }}
-                            {{ form.type }}
-                        </div>
+                        {#                        <div class="form-group">#}
+                        {#                            {{ form.list_type.label_tag }}#}
+                        {#                            {{ form.list_type }}#}
+                        {#                        </div>#}
                         <div class="form-group">
                             {{ form.file.label_tag }}
                             {{ form.file }}

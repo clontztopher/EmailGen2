@@ -1,9 +1,14 @@
 from django.db.models import Model
-from . import models_aptx as aptx, models_retx as retx
+
+from .models_retx import RealEstateTexasListModel, RealEstateAgentTexasModel
+from .models_aptx import AppraiserTexasListModel, AppraiserTexasModel
+from .models_retxprep import RealEstateTexasPrepListModel, RealEstateTexasPrepModel
 
 
 def get_models(list_type) -> (Model, Model):
     if list_type == 'aptx':
-        return aptx.AppraiserTexasListModel, aptx.AppraiserTexasModel
+        return AppraiserTexasListModel, AppraiserTexasModel
     if list_type == 'retx':
-        return retx.RealEstateTexasListModel, retx.RealEstateAgentTexasModel
+        return RealEstateTexasListModel, RealEstateAgentTexasModel
+    if list_type == 'retxprep':
+        return RealEstateTexasPrepListModel, RealEstateTexasPrepModel
