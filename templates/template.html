@@ -23,6 +23,8 @@
 
     <!-- Added Library Styles -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    {% block custom_css %}{% endblock custom_css %}
 </head>
 
 <body id="page-top">
@@ -115,6 +117,7 @@
 <!--<script src="{% static 'js/demo/chart-area-demo.js' %}"></script>-->
 <!--<script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>-->
 
+{% block custom_scripts %}{% endblock custom_scripts %}
 
 </body>
 

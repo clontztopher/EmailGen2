@@ -1,5 +1,5 @@
 import pandas as pd
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.core.files import File
 from ..upload_utils import save_list
 
@@ -8,21 +8,8 @@ from ...models.model_utils import get_models
 
 class UploadTests(TestCase):
 
-    def test_upload_retxprep(self):
-        with open('email_gen/list_upload/upload_tests/REIApplication.txt', 'rb') as f:
-            prep_file = File(f)
-            opts = dict(
-                sep='\t',
-                header=None,
-                chunksize=100000,
-                encoding='latin',
-                skipinitialspace=True,
-            )
-            reader = pd.read_csv(prep_file, **opts)
-            for chunk in reader:
-                chunk = chunk.fillna('')
-                for entity in chunk.itertuples():
-                    print(str(entity))
+    def test_upload(self):
+        pass
 
     def test_save_list(self):
         aptx_list_model, aptx_entity_model = get_models('aptx')
