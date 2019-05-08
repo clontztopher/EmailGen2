@@ -5,8 +5,14 @@ class SourceListModel(models.Model):
     file_name = models.CharField(max_length=60)
     display_name = models.CharField(max_length=60, default='Uploaded List')
     update_date = models.DateField(auto_now=True)
-    field_labels = models.TextField(blank=True)
-    field_types = models.TextField(blank=True)
+    field_labels = models.CharField(blank=True, max_length=1000)
+    field_types = models.TextField(blank=True, max_length=1000)
+
+    def get_meta(self):
+        if self.field_labels != '' and self.field_types != '':
+            return self.field_labels.split('::'), self.field_types.split('::')
+        else:
+            return None, None
 
     def __str__(self):
         return '%s - %s' % (self.file_name, self.update_date)
@@ -28,25 +34,25 @@ class Person(models.Model):
 class EmailAttribute(models.Model):
     field_label = models.CharField(max_length=32, default='email')
     email = models.EmailField(blank=True)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='emails')
 
 
 class DateAttribute(models.Model):
     field_label = models.CharField(max_length=32, default='date_field')
     date = models.DateField(blank=True)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='date_fields')
 
 
 class NumericAttribute(models.Model):
     field_label = models.CharField(max_length=32, default='numeric_field')
     num = models.IntegerField(blank=True)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='num_fields')
 
 
 class TextAttribute(models.Model):
     field_label = models.CharField(max_length=32, default='text_field')
     text = models.CharField(max_length=255)
-    person = models.ForeignKey(Person, on_delete=models.CASCADE)
+    person = models.ForeignKey(Person, on_delete=models.CASCADE, related_name='text_fields')
 
 # class TrecLicenseStatus(models.Model):
 #     DEFAULT_NAME = 'lic_status'

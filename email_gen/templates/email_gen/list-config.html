@@ -17,27 +17,43 @@
                     <form id="save-list">
                         {% csrf_token %}
                         <input type="hidden" name="file_name" value="{{ source.file_name }}">
-                        {% for label, content in sample.iteritems %}
+                        {% for field_label, field_type, sample_values in list_data %}
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
                                         <label for="field_type">Field Type</label>
                                         <select name="field_type" id="field-type" class="form-control">
-                                            <option value="text">Text</option>
-                                            <option value="date">Date</option>
-                                            <option value="numeric">Number</option>
-                                            <option value="email">Email</option>
-                                            <option value="fullname">Full Name</option>
-                                            <option value="firstname">First Name</option>
-                                            <option value="middlename">Middle Name</option>
-                                            <option value="lastname">Last Name</option>
-                                            <option value="suffix">Suffix</option>
+                                            <option value="text" {% if field_type == 'text' %}selected{% endif %}>Text
+                                            </option>
+                                            <option value="date" {% if field_type == 'date' %}selected{% endif %}>Date
+                                            </option>
+                                            <option value="numeric" {% if field_type == 'numeric' %}selected{% endif %}>
+                                                Number
+                                            </option>
+                                            <option value="email" {% if field_type == 'email' %}selected{% endif %}>
+                                                Email
+                                            </option>
+                                            <option value="fullname"
+                                                    {% if field_type == 'fullname' %}selected{% endif %}>Full Name
+                                            </option>
+                                            <option value="firstname"
+                                                    {% if field_type == 'firstname' %}selected{% endif %}>First Name
+                                            </option>
+                                            <option value="middlename"
+                                                    {% if field_type == 'middlename' %}selected{% endif %}>Middle Name
+                                            </option>
+                                            <option value="lastname"
+                                                    {% if field_type == 'lastname' %}selected{% endif %}>Last Name
+                                            </option>
+                                            <option value="suffix" {% if field_type == 'suffix' %}selected{% endif %}>
+                                                Suffix
+                                            </option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="field_label">Field Label</label>
                                         <input type="text" name="field_label" class="form-control"
-                                               value="{{ label }}">
+                                               value="{{ field_label }}">
                                     </div>
                                 </div>
                                 <div class="col">
@@ -55,7 +71,7 @@
                                             </thead>
                                             <tbody>
 
-                                            {% for val in content.tolist %}
+                                            {% for val in sample_values %}
                                                 <tr>
                                                     <td>
                                                         {{ val }}&ensp;

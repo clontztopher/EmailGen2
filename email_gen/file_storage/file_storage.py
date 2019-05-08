@@ -17,13 +17,13 @@ def get_list_sample(file_name):
     file = io.BytesIO(blob_string)
     reader = pd.read_csv(filepath_or_buffer=file, sep='\t', encoding='latin', header=None)
     head = reader.head().fillna('')
-    return head
+    return [content.tolist() for label, content in head.iteritems()]
 
 
-def get_file_reader(file_name):
+def get_file_reader(file_name, chunksize=5000):
     bucket = get_source_bucket()
     blob = bucket.get_blob(file_name)
     blob_string = blob.download_as_string()
     file = io.BytesIO(blob_string)
-    reader = pd.read_csv(filepath_or_buffer=file, sep='\t', encoding='latin', header=None, chunksize=5000)
+    reader = pd.read_csv(filepath_or_buffer=file, sep='\t', encoding='latin', header=None, chunksize=chunksize)
     return reader

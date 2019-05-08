@@ -32,12 +32,13 @@ def upload_list(request):
 def list_config(request, file_name):
     sample = get_list_sample(file_name)
     source_instance = SourceListModel.objects.get(file_name=file_name)
-    if source_instance.field_labels != '':
-        fields = source_instance.field_labels.split('::')
-    else:
-        fields = None
+    list_fields, list_types = source_instance.get_meta()
+    if not list_fields:
+        list_fields = ['' for _ in range(len(sample.columns))]
+        list_types = list_fields
+    list_data = list(zip(list_fields, list_types, sample))
     return render(request, 'email_gen/list-config.html',
-                  {'source': source_instance, 'sample': sample, 'fields': fields})
+                  {'source': source_instance, 'list_data': list_data})
 
 
 def list_save(request):
@@ -50,11 +51,13 @@ def list_save(request):
         person_field_type_names = ('fullname', 'firstname', 'middlename', 'lastname', 'suffix')
 
         # File fetch
-        reader = get_file_reader(file_name)
+        reader = get_file_reader(file_name, chunksize=5000)
 
         # Database Stuff
         source_instance = SourceListModel.objects.get(file_name=file_name)
         source_instance.field_labels = str.join('::', field_labels)
+        source_instance.field_types = str.join('::', field_types)
+        source_instance.save()
 
         # Clear out list
         if hasattr(source_instance, 'people'):
