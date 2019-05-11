@@ -1,7 +1,7 @@
 [
   {
     "origin": [
-      "http://csre-email-gen.appspot.com",
+      "https://csre-eg2.appspot.com",
       "http://127.0.0.1:8000"
     ],
     "responseHeader": [
@@ -9,8 +9,7 @@
     ],
     "method": [
       "GET",
-      "HEAD",
-      "DELETE"
+      "HEAD"
     ],
     "maxAgeSeconds": 3600
   }

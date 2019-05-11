@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models.models import SourceListModel
+from .models import SourceListModel
 
 
 def index(request):

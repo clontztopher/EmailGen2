@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .upload_form import SourceListUploadForm
 
-from ..models.models import SourceListModel, Person, TextAttribute, DateAttribute, NumericAttribute, EmailAttribute
+from ..models import SourceListModel, Person, TextAttribute, DateAttribute, NumericAttribute, EmailAttribute
 from ..file_storage.file_storage import get_list_sample, get_source_bucket, get_file_reader
 
 
@@ -34,7 +34,7 @@ def list_config(request, file_name):
     source_instance = SourceListModel.objects.get(file_name=file_name)
     list_fields, list_types = source_instance.get_meta()
     if not list_fields:
-        list_fields = ['' for _ in range(len(sample.columns))]
+        list_fields = ['' for _ in range(len(sample))]
         list_types = list_fields
     list_data = list(zip(list_fields, list_types, sample))
     return render(request, 'email_gen/list-config.html',

@@ -1,11 +1,12 @@
 import io
 import pandas as pd
 from google.cloud import storage
+from django.conf import settings
 
 
 def get_source_bucket():
     storage_client = storage.Client()
-    bucket_name = 'eg-source-files'
+    bucket_name = settings.SOURCE_LIST_STORAGE_BUCKET_NAME
     bucket = storage_client.get_bucket(bucket_name)
     return bucket
 
