@@ -1,8 +1,7 @@
 {% if file_list %}
     {% for file in file_list %}
         <div class="col-md-6 mb-4">
-{#            <a href="{% url 'download_form' file.file_name %}">#}
-            <a href="#">
+            <a href="{% url 'download_form' file.file_name %}">
                 <div class="card border-left-primary shadow h-100 py-2 list-card">
                     <div class="card-body">
                         <div class="row no-gutters align-items-center">

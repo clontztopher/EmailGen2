@@ -1,0 +1,40 @@
+<div class="p-3">{{ field_label }}</div>
+<div class="row mb-3 date-inputs">
+    <div class="col" id="individual-date-container">
+        <div class="card">
+            <div class="form-group row">
+                <div class="col">
+                    <input type="text" class="flatpickr form-control" name="exp_indie_date_0"
+                           id="id_exp_indie_date_0">
+                </div>
+                <div class="col d-flex align-items-center p-1">
+                    <i class="fas fa-minus-square text-danger fa-2x"></i>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button class="btn btn-success btn-icon-split" id="add-date">
+                    <span class="icon text-white">
+                        <i class="fas fa-plus"></i>
+                    </span>
+                        <span class="text">Add Date</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="row">
+                <label for="id_date_range_min">From</label>
+                <input type="text" class="flatpickr form-control" name="exp_date_range_min"
+                       id="id_exp_date_range_min">
+            </div>
+            <div class="row">
+                <label for="id_date_range_max">To</label>
+                <input type="text" class="flatpickr form-control" name="exp_date_range_max"
+                       id="id_exp_date_range_max">
+            </div>
+        </div>
+    </div>
+</div>

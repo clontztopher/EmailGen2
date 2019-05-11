@@ -5,10 +5,10 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="h3 mb-2 text-gray-800">
-                {{ file.display_name }}
+                {{ list_data.display_name }}
             </h1>
             <span class="badge badge-primary">
-            {{ file.update_date.date }}
+            {{ list_data.updated }}
         </span>
             <small> - UPLOADED</small>
         </div>
@@ -19,53 +19,21 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-text">
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {{ form.non_field_errors }}
-                            </div>
-                        {% endif %}
-                        <form action="{% url 'download_form' file.list_type %}" method="POST" id="download-form">
+                        <form action="#" method="POST" id="download-form">
                             {% csrf_token %}
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group {% if form.file_name.errors %}'is-invalid'{% endif %}">
-                                        <label for="{{ form.file_name.id_for_label }}">File Name</label>
-                                        {{ form.file_name }}
-                                    </div>
-                                    {% if form.file_name.errors %}
-                                        <div class="invalid-feedback">
-                                            {{ form.file_name.errors }}
-                                        </div>
+                            <div class="container">
+                                {% for field_label, field_type in list_data.field_data %}
+                                    {% if field_type == 'email' %}
+                                        {% include 'email_gen/form-group-email.html' %}
+                                    {% elif field_type == 'text' %}
+                                        {% include 'email_gen/form-group-text.html' %}
+                                    {% elif field_type == 'date' %}
+                                        {% include 'email_gen/form-group-date.html' %}
+                                    {% elif field_type == 'numeric' %}
+                                        {% include 'email_gen/form-group-numeric.html' %}
                                     {% endif %}
-                                </div>
+                                {% endfor %}
                             </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="form-group {% if form.email_domains.errors %}'is-invalid'{% endif %}">
-                                        <label for="{{ form.email_domains.id_for_label }}">Email Domains</label>
-                                        {{ form.email_domains }}
-                                    </div>
-                                    {% if form.email_domains.errors %}
-                                        <div class="invalid-feedback">
-                                            {{ form.email_domains.errors }}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                <div class="col-3 d-flex align-items-end pb-4">
-                                    <div class="form-check">
-                                        {{ form.email_domains_inclusive }}
-                                        <label for="{{ form.email_domains_inclusive.id_for_label }}"
-                                               class="form-check-label">Inclusive</label>
-                                    </div>
-                                </div>
-                            </div>
-                            {% if file.list_type == 'retx' %}
-                                {% include 'email_gen/download-retx.html' %}
-                            {% elif file.list_type == 'aptx' %}
-                                {% include 'email_gen/download-aptx.html' %}
-                            {% elif file.list_type == 'retxprep' %}
-                                {% include 'email_gen/download-retxprep.html' %}
-                            {% endif %}
                             <input class="btn btn-primary" type="submit" value="Submit">
                         </form>
                     </div>

@@ -1,10 +1,7 @@
 import django_filters
-from ..models import Person
+from ..models import Person, SourceListModel
 
 
-class PersonFilter(django_filters.FilterSet):
-    emails = django_filters.CharFilter(lookup_expr='email__icontains')
+class ListFilter(django_filters.FilterSet):
 
-    class Meta:
-        model = Person
-        fields = ['emails']
+    pass

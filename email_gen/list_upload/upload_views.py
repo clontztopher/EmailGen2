@@ -74,7 +74,7 @@ def list_save(request):
 
             for person_data in chunk.itertuples(name=None, index=False):
 
-                person = Person(source_list=source_instance, id=random.getrandbits(32))
+                person = Person(source_list=source_instance)
                 people.append(person)
 
                 for j, (field_type, field_label) in enumerate(zip(field_types, field_labels)):
