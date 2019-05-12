@@ -4,9 +4,9 @@ jQuery(function ($) {
 
     $('.date-inputs').each(function () {
         let $fieldContainer = $(this);
-        let $addDateBtn = $fieldContainer.find('button');
-        let $individualDateContainer = $fieldContainer.find('#individual-date-container');
-        let $baseClone = $individualDateContainer.find('.row').clone();
+        let $individualDateContainer = $fieldContainer.find('#individual-date-container .card-body');
+        let $addDateBtn = $individualDateContainer.find('button');
+        let $baseClone = $individualDateContainer.find('.form-group.row').clone();
 
         $baseClone
             .find('input')

@@ -26,5 +26,12 @@ def get_file_reader(file_name, chunksize=5000):
     blob = bucket.get_blob(file_name)
     blob_string = blob.download_as_string()
     file = io.BytesIO(blob_string)
-    reader = pd.read_csv(filepath_or_buffer=file, sep='\t', encoding='latin', header=None, chunksize=chunksize)
+    reader = pd.read_csv(
+        filepath_or_buffer=file,
+        sep='\t',
+        encoding='latin',
+        header=None,
+        chunksize=chunksize,
+        parse_dates=True
+    )
     return reader

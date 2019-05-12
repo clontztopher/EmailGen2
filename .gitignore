@@ -1,12 +1,11 @@
 
 settings.py
 email_gen/uploads/*
-!email_gen/uploads/.gitkeep
-db.sqlite3
 app.yaml
-csre-email-gen-8175ced2501a.json
 cloud_sql_proxy
 **.csv
+env
+csre-email-gen-8f388bb559a0.json
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

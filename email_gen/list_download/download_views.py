@@ -6,7 +6,8 @@ def download_form(request, file_name):
     source_instance = SourceListModel.objects.get(file_name=file_name)
 
     if request.method == 'POST':
-        print(str(request.POST))
+        for name, val in request.POST.items():
+            print('%s: %s' % (name, val))
 
     field_labels, field_types = source_instance.get_meta()
     list_data = {

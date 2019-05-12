@@ -1,4 +1,29 @@
-<div class="form-group">
-    <label for="text-field">{{ field_label }}</label>
-    <input type="text" name="text-field" id="text-field">
+<div class="form-group row">
+    <label for="text-field" class="col col-form-label">{{ field_label }}</label>
+    <div class="col">
+        <input type="text" name="{{ field_label }}" id="{{ field_label }}" class="form-control">
+    </div>
+    <div class="col">
+        <div class="custom-control custom-radio custom-control-inline">
+            <input
+                    type="radio"
+                    id="{{ field_label }}-text-exact"
+                    name="{{ field_label }}-text"
+                    class="custom-control-input"
+                    checked>
+
+            <label class="custom-control-label" for="{{ field_label }}-text-exact">Exact Match</label>
+        </div>
+    </div>
+    <div class="col">
+        <div class="custom-control custom-radio custom-control-inline">
+            <input
+                    type="radio"
+                    id="{{ field_label }}-text-includes"
+                    name="{{ field_label }}-text"
+                    class="custom-control-input">
+
+            <label class="custom-control-label" for="{{ field_label }}-text-includes">Inclusive Match</label>
+        </div>
+    </div>
 </div>

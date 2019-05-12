@@ -1,4 +1,5 @@
 import random
+import pandas as pd
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .upload_form import SourceListUploadForm
@@ -74,7 +75,7 @@ def list_save(request):
 
             for person_data in chunk.itertuples(name=None, index=False):
 
-                person = Person(source_list=source_instance)
+                person = Person(source_list=source_instance, id=random.getrandbits(32))
                 people.append(person)
 
                 for j, (field_type, field_label) in enumerate(zip(field_types, field_labels)):
@@ -98,8 +99,9 @@ def list_save(request):
                         continue
 
                     if field_type == 'date':
+                        date = pd.to_datetime(attr_val)
                         date_attrs.append(
-                            DateAttribute(date=attr_val, person=person, field_label=field_label)
+                            DateAttribute(date=date, person=person, field_label=field_label)
                         )
                         continue
 
