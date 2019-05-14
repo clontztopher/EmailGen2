@@ -17,7 +17,7 @@ jQuery(function ($) {
         $addDateBtn.on('click', function (e) {
             e.preventDefault();
             let $indieDateRows = $individualDateContainer.find('.row');
-            let nextIndex = $indieDateRows.length;
+            let nextIndex = $indieDateRows.length - 1;
             let $newDateRow = $baseClone.clone();
             let $newDateInput = $newDateRow.find('input');
             let newId = $newDateInput

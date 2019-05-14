@@ -18,8 +18,8 @@
                         <input
                                 type="text"
                                 class="flatpickr form-control"
-                                name="exp_indie_date_0"
-                                id="id_exp_indie_date_0">
+                                name="{{ field_label }}-date-indie_0"
+                                id="{{ field_label }}-date-indie_0">
                     </div>
                     <div class="col d-flex align-items-center p-1">
                         <i class="fas fa-minus-square text-danger fa-2x"></i>
@@ -34,13 +34,19 @@
                 <div class="row">
                     <div class="col">
                         <label for="id_date_range_min">From</label>
-                        <input type="text" class="flatpickr form-control" name="exp_date_range_min"
-                               id="id_exp_date_range_min">
+                        <input
+                                type="text"
+                                class="flatpickr form-control"
+                                name="{{ field_label }}-date-range_min"
+                                id="{{ field_label }}-date-range_min">
                     </div>
                     <div class="col">
-                        <label for="id_date_range_max">To</label>
-                        <input type="text" class="flatpickr form-control" name="exp_date_range_max"
-                               id="id_exp_date_range_max">
+                        <label for="{{ field_label }}-date-range_max">To</label>
+                        <input
+                                type="text"
+                                class="flatpickr form-control"
+                                name="{{ field_label }}-date-range_max"
+                                id="{{ field_label }}-date-range_max">
                     </div>
                 </div>
             </div>

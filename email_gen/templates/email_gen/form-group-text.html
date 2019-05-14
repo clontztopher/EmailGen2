@@ -1,29 +1,38 @@
 <div class="form-group row">
-    <label for="text-field" class="col col-form-label">{{ field_label }}</label>
-    <div class="col">
-        <input type="text" name="{{ field_label }}" id="{{ field_label }}" class="form-control">
+    <label
+            for="{{ field_label }}-text-value"
+            class="col-2 col-form-label">{{ field_label }}
+    </label>
+    <div class="col-6">
+        <input
+                type="text"
+                name="{{ field_label }}-text-value"
+                id="{{ field_label }}-text-value"
+                class="form-control">
     </div>
     <div class="col">
         <div class="custom-control custom-radio custom-control-inline">
             <input
                     type="radio"
-                    id="{{ field_label }}-text-exact"
-                    name="{{ field_label }}-text"
+                    id="{{ field_label }}-exact"
+                    name="{{ field_label }}-text-exact"
                     class="custom-control-input"
+                    value="1"
                     checked>
 
-            <label class="custom-control-label" for="{{ field_label }}-text-exact">Exact Match</label>
+            <label class="custom-control-label" for="{{ field_label }}-exact">Exact Match</label>
         </div>
     </div>
     <div class="col">
         <div class="custom-control custom-radio custom-control-inline">
             <input
                     type="radio"
-                    id="{{ field_label }}-text-includes"
-                    name="{{ field_label }}-text"
-                    class="custom-control-input">
+                    id="{{ field_label }}-includes"
+                    name="{{ field_label }}-text-exact"
+                    class="custom-control-input"
+                    value="0">
 
-            <label class="custom-control-label" for="{{ field_label }}-text-includes">Inclusive Match</label>
+            <label class="custom-control-label" for="{{ field_label }}-includes">Inclusive Match</label>
         </div>
     </div>
 </div>

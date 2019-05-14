@@ -9,7 +9,5 @@ urlpatterns = [
     path('upload/', upload_list, name="upload"),
     path('list-config/<str:file_name>/', list_config, name="list_config"),
     path('list-save/', list_save, name="list_save"),
-    # path('upload/<str:file_type>/', upload_list, name="upload"),
-    # path('download/<str:file_type>/', download_form, name="download_form"),
     path('download-form/<str:file_name>/', download_form, name="download_form")
 ]

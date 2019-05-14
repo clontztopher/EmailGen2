@@ -1,33 +1,35 @@
 <div class="form-group row">
-    <label for="email-domains" class="col col-form-label">Email Domains</label>
-    <div class="col">
+    <label for="email-domains" class="col-2 col-form-label">Email Domains</label>
+    <div class="col-5">
         <input
                 type="text"
                 id="email-domains"
-                name="email-domains"
+                name="email-domains-values"
                 class="form-control">
     </div>
     <div class="col">
         <div class="custom-control custom-radio custom-control-inline">
             <input
                     type="radio"
-                    id="{{ field_label }}-inclusive"
-                    name="{{ field_label }}-domains"
+                    id="domains-inclusive"
+                    name="email-domains-inclusive"
                     class="custom-control-input"
-                    checked>
+                    value="1">
 
-            <label class="custom-control-label" for="{{ field_label }}-inclusive">Inclusive</label>
+            <label class="custom-control-label" for="domains-inclusive">Inclusive</label>
         </div>
     </div>
     <div class="col">
         <div class="custom-control custom-radio custom-control-inline">
             <input
                     type="radio"
-                    id="{{ field_label }}-exclusive"
-                    name="{{ field_label }}-domains"
-                    class="custom-control-input">
+                    id="domains-exclusive"
+                    name="email-domains-inclusive"
+                    class="custom-control-input"
+                    value="0"
+                    checked>
 
-            <label class="custom-control-label" for="{{ field_label }}-exclusive">Exclusive</label>
+            <label class="custom-control-label" for="domains-exclusive">Exclusive</label>
         </div>
     </div>
 </div>

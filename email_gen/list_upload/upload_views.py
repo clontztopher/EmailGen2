@@ -47,7 +47,7 @@ def list_save(request):
         # Data prep
         file_name = request.POST['file_name']
         field_labels = request.POST.getlist('field_label')
-        field_labels = [l if (l != '') else ('field_' + str(i)) for i, l in enumerate(field_labels)]
+        field_labels = [l.replace(' ', '_') if (l != '') else ('field_' + str(i)) for i, l in enumerate(field_labels)]
         field_types = request.POST.getlist('field_type')
         person_field_type_names = ('fullname', 'firstname', 'middlename', 'lastname', 'suffix')
 
