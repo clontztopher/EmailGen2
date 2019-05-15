@@ -288,32 +288,25 @@ TREC_COUNTY_CODES_BY_REGION = {
               "251", "253"]
 }
 
-TREC_LIC_STATUS = [
-    ('20', 'Current and Active'),
-    ('21', 'Current and Inactive'),
-    ('30', 'Probation and Active'),
-    ('31', 'Probation and Inactive'),
-    ('45', 'Expired'),
-    ('47', 'Suspended'),
-    ('56', 'Relinquished'),
-    ('57', 'Revoked'),
-    ('80', 'Deceased')
-]
-
-TREC_LIC_TYPES = [
-    ('SALE', 'Sales Agent'),
-    ('BRK', 'Individual Broker'),
-    ('BLLC', 'Limited Liability Corporation Broker'),
-    ('BCRP', 'Corporation Broker'),
-    ('6', 'Partnership Broker'),
-    ('REB', 'Broker Organization Branch'),
-    ('PRIN', 'Professional Inspector'),
-    ('REIN', 'Real Estate Inspector'),
-    ('APIN', 'Apprentice Inspector'),
-    ('ILLC', 'Professional Inspector, LLC'),
-    ('ICRP', 'Professional Inspector, Corporation'),
-    ('ERWI', 'Easement and Right-of-Way, Individual'),
-    ('ERWO', 'Easement and Right-of-Way, Business')
+TREC_LIC_STATUS_MAP = [
+    # Current and Active
+    ('20', 'ACT'),
+    # Current and Inactive
+    ('21', 'INA'),
+    # Probation and Active
+    ('30', 'ACT'),
+    # Probation and Inactive
+    ('31', 'INA'),
+    # Expired
+    ('45', 'EXP'),
+    # Suspended
+    ('47', 'SUS'),
+    # Relinquished
+    ('56', 'REL'),
+    # Revoked
+    ('57', 'REV'),
+    # Deceased
+    ('80', 'DEC')
 ]
 
 TREC_ED_STATUS = [
@@ -328,13 +321,52 @@ TREC_MCE_STATUS = [
     ('2', 'MCE Requirements Met')
 ]
 
-APTX_LIC_STATUS = TREC_LIC_STATUS
+"""
+OREC
+"""
 
-APTX_LIC_TYPES = [
-    ('APCR', 'Certified Residential Appraiser'),
-    ('APGN', 'Certified General Appraiser'),
-    ('APOS', 'Temporary Out of State Appraiser'),
-    ('APPV', 'Provisional Licensed Appraiser'),
-    ('APSC', 'Licensed Residential Appraiser'),
-    ('APTR', 'Appraiser Trainee')
+OREC_LIC_STATUS_MAP = [
+    ('A', 'ACT'),
+    ('I', 'INA')
+]
+
+LICENSE_STATUS = [
+    ('N/A', 'Not Available'),
+    ('ACT', 'Active'),
+    ('INA', 'Inactive'),
+    ('EXP', 'Expired'),
+    ('SUS', 'Suspended'),
+    ('REL', 'Relinquished'),
+    ('REV', 'Revoked'),
+    ('DEC', 'Deceased')
+]
+
+LICENSE_TYPES = [
+    # TREC Types
+    ('SALE', 'TREC - Sales Agent'),
+    ('BRK', 'TREC - Individual Broker'),
+    ('BLLC', 'TREC - Limited Liability Corporation Broker'),
+    ('BCRP', 'TREC - Corporation Broker'),
+    ('6', 'TREC - Partnership Broker'),
+    ('REB', 'TREC - Broker Organization Branch'),
+    ('PRIN', 'TREC - Professional Inspector'),
+    ('REIN', 'TREC - Real Estate Inspector'),
+    ('APIN', 'TREC - Apprentice Inspector'),
+    ('ILLC', 'TREC - Professional Inspector, LLC'),
+    ('ICRP', 'TREC - Professional Inspector, Corporation'),
+    ('ERWI', 'TREC - Easement and Right-of-Way, Individual'),
+    ('ERWO', 'TREC - Easement and Right-of-Way, Business'),
+
+    # TALCB Types
+    ('APCR', 'TALCB - Certified Residential Appraiser'),
+    ('APGN', 'TALCB - Certified General Appraiser'),
+    ('APOS', 'TALCB - Temporary Out of State Appraiser'),
+    ('APPV', 'TALCB - Provisional Licensed Appraiser'),
+    ('APSC', 'TALCB - Licensed Residential Appraiser'),
+    ('APTR', 'TALCB - Appraiser Trainee'),
+
+    # OREC Types
+    ('BR', 'OREC - Broker'),
+    ('SA', 'OREC - Sales Associate'),
+    ('PS', 'OREC - Provisional Sales Associate')
 ]

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .upload_form import SourceListUploadForm
 
-from ..models import SourceListModel, Person, TextAttribute, DateAttribute, NumericAttribute, EmailAttribute
+from ..models import SourceListModel, Person
 from ..file_storage.file_storage import get_list_sample, get_source_bucket, get_file_reader
 
 
@@ -33,89 +33,71 @@ def upload_list(request):
 def list_config(request, file_name):
     sample = get_list_sample(file_name)
     source_instance = SourceListModel.objects.get(file_name=file_name)
-    list_fields, list_types = source_instance.get_meta()
+    field_opts = [f.name for f in Person._meta.get_fields() if f.name not in ('source_list', 'id')]
+
+    # Prepend 'None' to be the default option
+    field_opts = ['None'] + field_opts
+
+    # Get existing list fields or a list of empty strings
+    list_fields = source_instance.get_meta()
     if not list_fields:
-        list_fields = ['' for _ in range(len(sample))]
-        list_types = list_fields
-    list_data = list(zip(list_fields, list_types, sample))
-    return render(request, 'email_gen/list-config.html',
-                  {'source': source_instance, 'list_data': list_data})
+        list_fields = ['None' for _ in range(len(sample))]
+
+    list_data = list(zip(list_fields, sample))
+
+    return render(request, 'email_gen/list-config.html', {
+        'source': source_instance,
+        'field_opts': field_opts,
+        'list_data': list_data
+    })
 
 
 def list_save(request):
     if request.method == 'POST':
         # Data prep
         file_name = request.POST['file_name']
-        field_labels = request.POST.getlist('field_label')
-        field_labels = [l.replace(' ', '_') if (l != '') else ('field_' + str(i)) for i, l in enumerate(field_labels)]
-        field_types = request.POST.getlist('field_type')
-        person_field_type_names = ('fullname', 'firstname', 'middlename', 'lastname', 'suffix')
+        field_labels = request.POST.getlist('field_labels')
 
         # File fetch
         reader = get_file_reader(file_name, chunksize=5000)
 
-        # Database Stuff
+        # Get the source list instance and field label metadata
         source_instance = SourceListModel.objects.get(file_name=file_name)
         source_instance.field_labels = str.join('::', field_labels)
-        source_instance.field_types = str.join('::', field_types)
         source_instance.save()
 
-        # Clear out list
+        # Clear out current db data for list
         if hasattr(source_instance, 'people'):
             source_instance.people.all().delete()
 
+        # Loop over dataframe that is a chunk of lines in the file
+        # and create a 'people' list to bulk create instances
         for chunk in reader:
             chunk = chunk.fillna('')
-
             people = []
-            email_attrs = []
-            text_attrs = []
-            date_attrs = []
-            numeric_attrs = []
 
+            # Loop over the lines in the file data chunk
+            # creating a Person instance from each
             for person_data in chunk.itertuples(name=None, index=False):
-
                 person = Person(source_list=source_instance, id=random.getrandbits(32))
                 people.append(person)
 
-                for j, (field_type, field_label) in enumerate(zip(field_types, field_labels)):
+                # Loop over the line/person data and add values to the
+                # Person instance for database insertion
+                for j, field_label in enumerate(field_labels):
+                    val = person_data[j]
 
-                    attr_val = person_data[j]
-
-                    if field_type in person_field_type_names:
-                        setattr(person, field_type, attr_val)
-                        continue
-
-                    if field_type == 'email':
-                        email_attrs.append(
-                            EmailAttribute(email=attr_val, person=person, field_label=field_label)
-                        )
-                        continue
-
-                    if field_type == 'text':
-                        text_attrs.append(
-                            TextAttribute(text=attr_val, person=person, field_label=field_label)
-                        )
-                        continue
-
-                    if field_type == 'date':
-                        date = pd.to_datetime(attr_val)
-                        date_attrs.append(
-                            DateAttribute(date=date, person=person, field_label=field_label)
-                        )
-                        continue
-
-                    if field_type == 'numeric':
-                        numeric_attrs.append(
-                            NumericAttribute(num=attr_val, person=person, field_label=field_label)
-                        )
-                        continue
+                    if field_label == 'lic_type' and val == 'I':
+                        val = 'INA'
+                    if field_label == 'lic_type' and val == 'A':
+                        val = 'ACT'
+                    if type(val) == str:
+                        val = val.strip()
+                    if 'date' in field_label:
+                        val = pd.to_datetime(val)
+                    setattr(person, field_label, val)
 
             Person.objects.bulk_create(people)
-            EmailAttribute.objects.bulk_create(email_attrs)
-            TextAttribute.objects.bulk_create(text_attrs)
-            DateAttribute.objects.bulk_create(date_attrs)
-            NumericAttribute.objects.bulk_create(numeric_attrs)
 
             print('chunk added')
 

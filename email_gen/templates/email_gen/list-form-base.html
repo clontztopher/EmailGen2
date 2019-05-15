@@ -22,18 +22,21 @@
                         <form action="#" method="POST" id="download-form">
                             {% csrf_token %}
                             <div class="container">
-                                {% for field_label, field_type in list_data.field_data %}
-                                    {% if field_type == 'email' %}
-                                        {% include 'email_gen/form-group-email.html' %}
-                                    {% elif field_type == 'text' %}
-                                        {% include 'email_gen/form-group-text.html' %}
-                                    {% elif field_type == 'date' %}
-                                        {% include 'email_gen/form-group-date.html' %}
-                                    {% elif field_type == 'numeric' %}
-                                        {% include 'email_gen/form-group-numeric.html' %}
-                                    {% endif %}
-                                {% endfor %}
-                                <input class="btn btn-primary" type="submit" value="Submit">
+                                <form action="" method="get">
+                                    {{ filter.form.as_p }}
+                                    <input class="btn btn-primary" type="submit" value="Submit">
+                                </form>
+                                Result count: {{ filter.qs.count }}
+                                {#                                {% for field_label in list_data.field_labels %}#}
+                                {#                                    {% if 'email' in field_label %}#}
+                                {#                                        {% include 'email_gen/form-group-email.html' %}#}
+                                {#                                    {% elif 'date' in field_label %}#}
+                                {#                                        {% include 'email_gen/form-group-date.html' %}#}
+                                {#                                    {% else %}#}
+                                {#                                        {% include 'email_gen/form-group-text.html' %}#}
+                                {#                                    {% endif %}#}
+                                {#                                {% endfor %}#}
+                                {#                                <input class="btn btn-primary" type="submit" value="Submit">#}
                             </div>
                         </form>
                     </div>
