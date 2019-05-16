@@ -288,26 +288,26 @@ TREC_COUNTY_CODES_BY_REGION = {
               "251", "253"]
 }
 
-TREC_LIC_STATUS_MAP = [
+TREC_LIC_STATUS_MAP = {
     # Current and Active
-    ('20', 'ACT'),
+    20: 'ACT',
     # Current and Inactive
-    ('21', 'INA'),
+    21: 'INA',
     # Probation and Active
-    ('30', 'ACT'),
+    30: 'ACT',
     # Probation and Inactive
-    ('31', 'INA'),
+    31: 'INA',
     # Expired
-    ('45', 'EXP'),
+    45: 'EXP',
     # Suspended
-    ('47', 'SUS'),
+    47: 'SUS',
     # Relinquished
-    ('56', 'REL'),
+    56: 'REL',
     # Revoked
-    ('57', 'REV'),
+    57: 'REV',
     # Deceased
-    ('80', 'DEC')
-]
+    80: 'DEC'
+}
 
 TREC_ED_STATUS = [
     ('0', 'No Non-elective CE Requirement'),
@@ -342,6 +342,7 @@ LICENSE_STATUS = [
 ]
 
 LICENSE_TYPES = [
+    ('N/A', 'Not Available'),
     # TREC Types
     ('SALE', 'TREC - Sales Agent'),
     ('BRK', 'TREC - Individual Broker'),

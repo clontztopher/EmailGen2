@@ -1,10 +1,11 @@
+import uuid
 from django.db import models
 from .constants import LICENSE_STATUS, LICENSE_TYPES, TREC_ED_STATUS, TREC_MCE_STATUS
 
 
 class SourceListModel(models.Model):
     file_name = models.CharField(max_length=60)
-    display_name = models.CharField(max_length=60, default='Uploaded List')
+    display_name = models.CharField(max_length=60, default='Uploaded List', unique=True)
     update_date = models.DateField(auto_now=True)
     field_labels = models.CharField(blank=True, max_length=1000)
 
@@ -21,7 +22,7 @@ class Person(models.Model):
     # Uses custom id so it can be attached to foreign fields before
     # bulk creating the instances. MySQL doesn't like the Django UUID field
     # so create it as a BigInt for now. Maybe update if moved to Postgres.
-    id = models.BigIntegerField(primary_key=True, editable=False)
+    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
 
     # Name Info
     fullname = models.CharField(max_length=255, blank=True)

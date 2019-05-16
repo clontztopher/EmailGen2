@@ -5,12 +5,17 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <div>
             <h1 class="h3 mb-2 text-gray-800">
-                {{ file.display_name }}
+                {{ source_instance.display_name }}
             </h1>
             <span class="badge badge-primary">
-            {{ file.update_date.date }}
-        </span>
+                {{ source_instance.update_date }}
+            </span>
             <small> - UPLOADED</small>
+        </div>
+        <div>
+            {% if results_available %}
+                Number of Results: {{ filter.qs.count }}
+            {% endif %}
         </div>
     </div>
     <!-- Content Row -->
@@ -19,11 +24,12 @@
             <div class="card">
                 <div class="card-body">
                     <div class="card-text">
-                        <form action="" method="get">
+                        <form action="" method="get" id="download-form">
                             {{ filter.form.as_p }}
-                            <input type="submit"/>
+                            <div>
+                                <input type="submit" class="btn btn-primary"/>
+                            </div>
                         </form>
-                        Result count: {{ filter.qs.count }}
                     </div>
                 </div>
             </div>

@@ -46,3 +46,15 @@ function addIndex(idx) {
 function removeIndieDate(e) {
     $(e.target).closest('.form-group.row').remove();
 }
+
+// List upload interface functions
+jQuery(function ($) {
+    let $uploadFormTextInput = $('#upload-form input[type=text]');
+    let $availableListsContainer = $('#available-lists-container');
+
+    $availableListsContainer.on('click', 'a', updateListName);
+
+    function updateListName(e) {
+        $uploadFormTextInput.val(this.innerHTML);
+    }
+});

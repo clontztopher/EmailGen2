@@ -1,4 +1,4 @@
-import random
+import os
 import pandas as pd
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
@@ -7,14 +7,20 @@ from .upload_form import SourceListUploadForm
 from ..models import SourceListModel, Person
 from ..file_storage.file_storage import get_list_sample, get_source_bucket, get_file_reader
 
+from ..constants import TREC_LIC_STATUS_MAP
+
 
 def upload_list(request):
+    available_lists = SourceListModel.objects.all()
+
     if request.method == 'POST':
         form = SourceListUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            file_name = request.FILES['file'].name
             display_name = form.cleaned_data['list_name']
+            file_ext = os.path.splitext(request.FILES['file'].name)[-1]
+            file_name = display_name.replace(' ', '-') + file_ext
+
             try:
                 SourceListModel.objects.get(file_name=file_name)
             except:
@@ -27,13 +33,13 @@ def upload_list(request):
             return redirect('/list-config/%s/' % file_name)
 
     form = SourceListUploadForm()
-    return render(request, 'email_gen/upload-form.html', {'form': form})
+    return render(request, 'email_gen/upload-form.html', {'form': form, 'available_lists': available_lists})
 
 
 def list_config(request, file_name):
     sample = get_list_sample(file_name)
     source_instance = SourceListModel.objects.get(file_name=file_name)
-    field_opts = [f.name for f in Person._meta.get_fields() if f.name not in ('source_list', 'id')]
+    field_opts = [f.name for f in Person._meta.get_fields() if f.name not in ('source_list', 'uuid')]
 
     # Prepend 'None' to be the default option
     field_opts = ['None'] + field_opts
@@ -79,7 +85,8 @@ def list_save(request):
             # Loop over the lines in the file data chunk
             # creating a Person instance from each
             for person_data in chunk.itertuples(name=None, index=False):
-                person = Person(source_list=source_instance, id=random.getrandbits(32))
+                # person = Person(source_list=source_instance, id=random.getrandbits(32))
+                person = Person(source_list=source_instance)
                 people.append(person)
 
                 # Loop over the line/person data and add values to the
@@ -87,14 +94,24 @@ def list_save(request):
                 for j, field_label in enumerate(field_labels):
                     val = person_data[j]
 
-                    if field_label == 'lic_type' and val == 'I':
-                        val = 'INA'
-                    if field_label == 'lic_type' and val == 'A':
-                        val = 'ACT'
+                    # Conversions for all types
                     if type(val) == str:
                         val = val.strip()
+
+                    # Conversions based on list configuration
+                    if field_label == 'lic_status':
+                        val = TREC_LIC_STATUS_MAP.get(val, val)
+
+                    if field_label == 'lic_type':
+                        if val == 'I':
+                            val = 'INA'
+                        if val == 'A':
+                            val = 'ACT'
+
                     if 'date' in field_label:
                         val = pd.to_datetime(val)
+
+                    # Set attribute on person to save
                     setattr(person, field_label, val)
 
             Person.objects.bulk_create(people)

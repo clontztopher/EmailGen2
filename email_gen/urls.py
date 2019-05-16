@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .list_upload.upload_views import upload_list, list_config, list_save
-from .list_download.download_views import download_form
+from .list_filter.list_filter_views import download_form
 from . import views
 
 urlpatterns = [
