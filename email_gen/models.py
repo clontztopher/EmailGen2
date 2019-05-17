@@ -52,6 +52,6 @@ class Person(models.Model):
     trec_date_app_expires = models.DateField(blank=True, null=True)
 
     # Education Info
-    trec_ed_status = models.CharField(blank=True, default='n/a', choices=TREC_ED_STATUS, max_length=255)
-    trec_mce_status = models.CharField(blank=True, default='n/a', choices=TREC_MCE_STATUS, max_length=255)
-    designated_supervisor = models.CharField(default='0', max_length=1)
+    trec_ed_status = models.CharField(blank=True, null=True, choices=TREC_ED_STATUS, max_length=255)
+    trec_mce_status = models.CharField(blank=True, null=True, choices=TREC_MCE_STATUS, max_length=255)
+    designated_supervisor = models.CharField(blank=True, null=True, max_length=1)

@@ -97,7 +97,7 @@ field_filters = {
         django_filters.ChoiceFilter(
             label='Designated Supervisor',
             field_name='designated_supervisor',
-            choices=[('0', 'False'), ('1', 'True')]
+            choices=[(0, 'False'), (1, 'True')]
         )
     ]
 }

@@ -99,9 +99,15 @@ def list_save(request):
                 # Loop over the line/person data and add values to the
                 # Person instance for database insertion
                 for j, field_label in enumerate(field_labels):
+                    
+                    # Skip untagged fields
+                    if field_label == 'None':
+                        continue
+
+                    # Get field data
                     val = person_data[j]
 
-                    # Conversions for all types
+                    # Strip spaces if string
                     if type(val) == str:
                         val = val.strip()
 
@@ -109,14 +115,20 @@ def list_save(request):
                     if field_label == 'lic_status':
                         val = TREC_LIC_STATUS_MAP.get(val, val)
 
+                    # Oklahoma license type conversion
                     if field_label == 'lic_type':
                         if val == 'I':
                             val = 'INA'
                         if val == 'A':
                             val = 'ACT'
 
+                    # Make sure empty dates are saved as 
+                    # None instead of Pandas NaT type
                     if 'date' in field_label:
-                        val = pd.to_datetime(val) if val != '' else None
+                        if val != '':
+                            val = pd.to_datetime(val)
+                        else:
+                            val = None
 
                     # Set attribute on person to save
                     setattr(person, field_label, val)

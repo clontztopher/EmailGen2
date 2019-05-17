@@ -16,7 +16,13 @@ def get_list_sample(file_name):
     blob = bucket.get_blob(file_name)
     blob_string = blob.download_as_string()
     file = io.BytesIO(blob_string)
-    reader = pd.read_csv(filepath_or_buffer=file, sep='\t', encoding='latin', header=None)
+    reader = pd.read_csv(
+        filepath_or_buffer=file,
+        sep='\t',
+        encoding='latin',
+        header=None,
+        dtype=str
+    )
     head = reader.head().fillna('')
     return [content.tolist() for label, content in head.iteritems()]
 
@@ -32,6 +38,6 @@ def get_file_reader(file_name, chunksize=5000):
         encoding='latin',
         header=None,
         chunksize=chunksize,
-        parse_dates=True
+        dtype=str
     )
     return reader
