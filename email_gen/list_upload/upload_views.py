@@ -10,9 +10,11 @@ from ..file_storage.file_storage import get_list_sample, get_source_bucket, get_
 from ..constants import TREC_LIC_STATUS_MAP
 
 
-def upload_list(request):
+def upload_list(request, file_name=None):
     available_lists = SourceListModel.objects.all()
-
+    display_name = None
+    if file_name:
+        display_name = available_lists.get(file_name=file_name).display_name
     if request.method == 'POST':
         form = SourceListUploadForm(request.POST, request.FILES)
 
@@ -32,8 +34,11 @@ def upload_list(request):
 
             return redirect('/list-config/%s/' % file_name)
 
-    form = SourceListUploadForm()
-    return render(request, 'email_gen/upload-form.html', {'form': form, 'available_lists': available_lists})
+    form = SourceListUploadForm(initial={'list_name': display_name})
+    return render(request, 'email_gen/upload-form.html', {
+        'form': form,
+        'available_lists': available_lists
+    })
 
 
 def list_config(request, file_name):
@@ -44,7 +49,7 @@ def list_config(request, file_name):
     # Prepend 'None' to be the default option
     field_opts = ['None'] + field_opts
 
-    # Get existing list fields or a list of empty strings
+    # Get existing list fields or a list of 'None'
     list_fields = source_instance.get_meta()
     if not list_fields:
         list_fields = ['None' for _ in range(len(sample))]
@@ -64,13 +69,16 @@ def list_save(request):
         file_name = request.POST['file_name']
         field_labels = request.POST.getlist('field_labels')
 
-        # File fetch
-        reader = get_file_reader(file_name, chunksize=5000)
-
         # Get the source list instance and field label metadata
         source_instance = SourceListModel.objects.get(file_name=file_name)
         source_instance.field_labels = str.join('::', field_labels)
         source_instance.save()
+
+        if request.POST['headers-only'] == '1':
+            return JsonResponse({'status': 200})
+
+        # File fetch
+        reader = get_file_reader(file_name, chunksize=5000)
 
         # Clear out current db data for list
         if hasattr(source_instance, 'people'):
@@ -85,7 +93,6 @@ def list_save(request):
             # Loop over the lines in the file data chunk
             # creating a Person instance from each
             for person_data in chunk.itertuples(name=None, index=False):
-                # person = Person(source_list=source_instance, id=random.getrandbits(32))
                 person = Person(source_list=source_instance)
                 people.append(person)
 
@@ -109,7 +116,7 @@ def list_save(request):
                             val = 'ACT'
 
                     if 'date' in field_label:
-                        val = pd.to_datetime(val)
+                        val = pd.to_datetime(val) if val != '' else None
 
                     # Set attribute on person to save
                     setattr(person, field_label, val)
@@ -117,7 +124,8 @@ def list_save(request):
             Person.objects.bulk_create(people)
 
             print('chunk added')
-
         print('Data save complete')
 
-    return JsonResponse({})
+    return JsonResponse({
+        'status': 200
+    })

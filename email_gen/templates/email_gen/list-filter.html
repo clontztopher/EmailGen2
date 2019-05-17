@@ -12,22 +12,21 @@
             </span>
             <small> - UPLOADED</small>
         </div>
-        <div>
-            {% if results_available %}
-                Number of Results: {{ filter.qs.count }}
-            {% endif %}
-        </div>
     </div>
     <!-- Content Row -->
     <div class="row">
-        <div class="col p-3">
+        <div class="col-md-4">
             <div class="card">
                 <div class="card-body">
                     <div class="card-text">
                         <form action="" method="get" id="download-form">
+                            <div class="form-group">
+                                <label for="filename">File Name</label>
+                                <input type="text" id="filename" name="filename" class="form-control">
+                            </div>
                             {{ filter.form.as_p }}
                             <div>
-                                <input type="submit" class="btn btn-primary"/>
+                                <input type="submit" class="btn btn-primary" value="Download"/>
                             </div>
                         </form>
                     </div>

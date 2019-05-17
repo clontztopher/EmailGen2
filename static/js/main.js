@@ -50,11 +50,11 @@ function removeIndieDate(e) {
 // List upload interface functions
 jQuery(function ($) {
     let $uploadFormTextInput = $('#upload-form input[type=text]');
-    let $availableListsContainer = $('#available-lists-container');
+    let $currentListSelect = $('#current-lists');
 
-    $availableListsContainer.on('click', 'a', updateListName);
+    $currentListSelect.on('change', updateListName);
 
     function updateListName(e) {
-        $uploadFormTextInput.val(this.innerHTML);
+        $uploadFormTextInput.val(e.target.value);
     }
 });

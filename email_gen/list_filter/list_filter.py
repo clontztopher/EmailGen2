@@ -1,8 +1,7 @@
 import django_filters
 from django_filters import widgets
 from django.db.models import Q
-from ..models import Person
-from ..constants import LICENSE_TYPES, LICENSE_STATUS, TREC_COUNTY_CODES, TREC_COUNTY_CODES_BY_REGION
+from ..constants import LICENSE_TYPES, LICENSE_STATUS
 
 
 class PersonFilter(django_filters.FilterSet):
@@ -12,23 +11,13 @@ class PersonFilter(django_filters.FilterSet):
         label='Include Domains',
         field_name='email',
         widget=widgets.CSVWidget,
-        method='filter_emails_in',
-
+        method='filter_emails_in'
     )
     exclude_domains = django_filters.BaseCSVFilter(
         label='Exclude Domains',
         field_name='email',
         widget=widgets.CSVWidget,
         method='filter_emails_out'
-    )
-    trec_county = django_filters.MultipleChoiceFilter(
-        field_name='trec_county',
-        choices=[(code, name) for code, name in TREC_COUNTY_CODES.items()]
-    )
-    trec_region = django_filters.MultipleChoiceFilter(
-        field_name='trec_county',
-        choices=[(name, name) for name, codes in TREC_COUNTY_CODES_BY_REGION.items()],
-        method='filter_trec_region'
     )
 
     def filter_emails_in(self, queryset, name, domains):
@@ -42,13 +31,3 @@ class PersonFilter(django_filters.FilterSet):
         for domain in domains:
             queryset = queryset.exclude(email__icontains=domain)
         return queryset
-
-    def filter_trec_region(self, queryset, name, regions):
-        county_codes = [code for region_name, region_codes in TREC_COUNTY_CODES_BY_REGION.items()
-                        for code in region_codes if region_name in regions]
-        queryset = queryset.filter(trec_county__in=county_codes)
-        return queryset
-
-    class Meta:
-        model = Person
-        fields = {}

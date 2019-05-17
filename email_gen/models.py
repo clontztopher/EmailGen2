@@ -19,9 +19,7 @@ class SourceListModel(models.Model):
 class Person(models.Model):
     source_list = models.ForeignKey(SourceListModel, on_delete=models.CASCADE, related_name='people')
 
-    # Uses custom id so it can be attached to foreign fields before
-    # bulk creating the instances. MySQL doesn't like the Django UUID field
-    # so create it as a BigInt for now. Maybe update if moved to Postgres.
+    # Uses custom id so it can be attached to foreign fields before bulk creating the instances.
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
 
     # Name Info
@@ -48,12 +46,12 @@ class Person(models.Model):
     lic_number = models.CharField(blank=True, max_length=20)  # Not guaranteed to be unique across all lists
     lic_status = models.CharField(default='N/A', choices=LICENSE_STATUS, max_length=255)
     lic_type = models.CharField(default='N/A', choices=LICENSE_TYPES, max_length=255)
-    lic_date_orig = models.DateField(null=True)
-    lic_date_exp = models.DateField(null=True)
-    trec_date_app_received = models.DateField(null=True)
-    trec_date_app_expires = models.DateField(null=True)
+    lic_date_orig = models.DateField(blank=True, null=True)
+    lic_date_exp = models.DateField(blank=True, null=True)
+    trec_date_app_received = models.DateField(blank=True, null=True)
+    trec_date_app_expires = models.DateField(blank=True, null=True)
 
     # Education Info
     trec_ed_status = models.CharField(blank=True, default='n/a', choices=TREC_ED_STATUS, max_length=255)
     trec_mce_status = models.CharField(blank=True, default='n/a', choices=TREC_MCE_STATUS, max_length=255)
-    designated_supervisor = models.BooleanField(default=False)
+    designated_supervisor = models.CharField(default='0', max_length=1)

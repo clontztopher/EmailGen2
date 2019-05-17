@@ -1,0 +1,10 @@
+@import 'sb-admin-2';
+
+.fa-minus-square:hover {
+  cursor: pointer;
+}
+
+#download-form p {
+  display: flex;
+  flex-direction: column;
+}

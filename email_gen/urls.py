@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name="index"),
     path('upload/', upload_list, name="upload"),
+    path('upload/<str:file_name>/', upload_list, name="upload_list"),
     path('list-config/<str:file_name>/', list_config, name="list_config"),
     path('list-save/', list_save, name="list_save"),
     path('download-form/<str:file_name>/', download_form, name="download_form")

@@ -1,0 +1,28 @@
+{
+  "name": "emailgen2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "parcel build static/scss/main.scss --out-dir static/css --out-file main.css",
+    "watch-css": "parcel watch static/scss/main.scss --out-dir static/css --out-file main.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clontztopher/EmailGen2.git"
+  },
+  "author": "Chris Clontz",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/clontztopher/EmailGen2/issues"
+  },
+  "homepage": "https://github.com/clontztopher/EmailGen2#readme",
+  "dependencies": {
+    "bundler": "^0.8.0",
+    "parcel": "^1.12.3"
+  },
+  "devDependencies": {
+    "sass": "^1.20.1"
+  }
+}

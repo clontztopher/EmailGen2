@@ -6,42 +6,38 @@
     <div class="row">
 
         <!-- Content Column -->
-        <div class="col mb-4">
+        <div class="col-md-4 mb-4">
             <!-- Project Card Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Upload File</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Upload List</h6>
                 </div>
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            <form enctype="multipart/form-data" action="/upload/" method="POST" id="upload-form">
-                                {% csrf_token %}
-                                <div class="form-group">
-                                    {{ form.list_name.label_tag }}
-                                    {{ form.list_name }}
-                                </div>
-                                <div class="form-group">
-                                    {{ form.file.label_tag }}
-                                    {{ form.file }}
-                                </div>
-                                <input class="btn btn-primary" type="submit" value="Submit">
-                            </form>
-                        </div>
-                        <div class="col">
-                            <div class="mb-2">Available Lists</div>
-                            <ul id="available-lists-container" class="list-group">
-                                {% for source_list in available_lists %}
-                                    <li class="list-group-item">
-                                        <a href="#">{{ source_list.display_name }}</a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                    <div class="form-group">
+                        <label for="current-lists">Existing Lists</label>
+                        <select name="current-lists" id="current-lists" class="form-control">
+                            <option value="">---------------</option>
+                            {% for source_list in available_lists %}
+                                <option value="{{ source_list.display_name }}">
+                                    {{ source_list.display_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    <form enctype="multipart/form-data" action="/upload/" method="POST" id="upload-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.list_name.label_tag }}
+                            {{ form.list_name }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.file.label_tag }}
+                            {{ form.file }}
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Submit">
+                    </form>
                 </div>
             </div>
-
         </div>
     </div>
 
