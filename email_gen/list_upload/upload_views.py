@@ -1,13 +1,11 @@
 import os
-import pandas as pd
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .upload_form import SourceListUploadForm
 
 from ..models import SourceListModel, Person
+from .person_builder import build_person
 from ..file_storage.file_storage import get_list_sample, get_source_bucket, get_file_reader
-
-from ..constants import TREC_LIC_STATUS_MAP
 
 
 def upload_list(request, file_name=None):
@@ -93,45 +91,8 @@ def list_save(request):
             # Loop over the lines in the file data chunk
             # creating a Person instance from each
             for person_data in chunk.itertuples(name=None, index=False):
-                person = Person(source_list=source_instance)
+                person = build_person(source_instance, person_data, field_labels)
                 people.append(person)
-
-                # Loop over the line/person data and add values to the
-                # Person instance for database insertion
-                for j, field_label in enumerate(field_labels):
-                    
-                    # Skip untagged fields
-                    if field_label == 'None':
-                        continue
-
-                    # Get field data
-                    val = person_data[j]
-
-                    # Strip spaces if string
-                    if type(val) == str:
-                        val = val.strip()
-
-                    # Conversions based on list configuration
-                    if field_label == 'lic_status':
-                        val = TREC_LIC_STATUS_MAP.get(val, val)
-
-                    # Oklahoma license type conversion
-                    if field_label == 'lic_type':
-                        if val == 'I':
-                            val = 'INA'
-                        if val == 'A':
-                            val = 'ACT'
-
-                    # Make sure empty dates are saved as 
-                    # None instead of Pandas NaT type
-                    if 'date' in field_label:
-                        if val != '':
-                            val = pd.to_datetime(val)
-                        else:
-                            val = None
-
-                    # Set attribute on person to save
-                    setattr(person, field_label, val)
 
             Person.objects.bulk_create(people)
 

@@ -7,6 +7,7 @@ cloud_sql_proxy
 env
 csre-email-gen-8f388bb559a0.json
 node_modules
+email_gen/list_upload/upload_tests/**.txt
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

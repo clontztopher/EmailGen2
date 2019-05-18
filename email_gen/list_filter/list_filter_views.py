@@ -19,7 +19,7 @@ def download_form(request, file_name):
         download_name = request.GET['filename']
         if download_name == '':
             download_name = source_instance.display_name.replace(' ', '')
-            
+
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="%s.csv"' % download_name
 

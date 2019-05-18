@@ -1,7 +1,6 @@
 import pandas as pd
 from django.test import TestCase, Client
 from django.core.files import File
-from ..upload_utils import save_list
 
 from ...models.model_utils import get_models
 

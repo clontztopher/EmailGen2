@@ -1,4 +1,5 @@
 import django_filters
+import pandas as pd
 from django_filters.widgets import CSVWidget
 from django.db.models import Q
 from ..constants import LICENSE_TYPES, LICENSE_STATUS, TREC_COUNTY_CODES, TREC_COUNTY_CODES_BY_REGION
@@ -25,6 +26,15 @@ def filter_trec_region(queryset, name, regions):
     county_codes = [code for region_name, region_codes in TREC_COUNTY_CODES_BY_REGION.items()
                     for code in region_codes if region_name in regions]
     queryset = queryset.filter(trec_county__in=county_codes)
+    return queryset
+
+
+def dates_match(queryset, name, dates):
+    dates = [pd.to_datetime(d) for d in dates]
+    query = Q(**{name: dates[0]})
+    for date in dates[1:]:
+        query |= Q(**{name: date})
+    queryset = queryset.filter(query)
     return queryset
 
 
@@ -115,6 +125,22 @@ def build_filter(fields):
     """
     list_filters = {}
     for field in fields:
+        if 'date' in field:
+            range_key = field + '_range_filter'
+            range_label = 'Date Range: ' + field
+            list_filters[range_key] = django_filters.DateFromToRangeFilter(
+                label=range_label,
+                field_name=field
+            )
+            indie_key = field + '_indie_filter'
+            indie_label = 'Date List: ' + field
+            list_filters[indie_key] = django_filters.BaseCSVFilter(
+                label=indie_label,
+                field_name=field,
+                widget=django_filters.widgets.CSVWidget,
+                method=dates_match
+            )
+
         fs = field_filters.get(field)
         if fs:
             for i, f in enumerate(fs):
