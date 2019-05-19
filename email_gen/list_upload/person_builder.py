@@ -17,6 +17,7 @@ def build_person(source_instance, person_data, field_labels):
         # Split a fullname out into first, middle and last
         if field_label == 'fullname':
             name = HumanName(val)
+            name.capitalize()
             person.firstname = getattr(name, 'first', '')
             person.middlename = getattr(name, 'middle', '')
             person.lastname = getattr(name, 'last', '')
@@ -24,6 +25,10 @@ def build_person(source_instance, person_data, field_labels):
 
         # Get field data
         val = person_data[j]
+
+        # Format names to title case
+        if field_label in ('firstname', 'middlename', 'lastname'):
+            val = val.title()
 
         # Strip spaces if string
         if type(val) == str:
@@ -47,7 +52,7 @@ def build_person(source_instance, person_data, field_labels):
                 val = pd.to_datetime(val)
             else:
                 val = None
-            
+
         # Set attribute on person to save
         setattr(person, field_label, val)
 
