@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block custom_scripts %}
-    <script src="{% static 'js/save-confirm.js' %}"></script>
+    <script src="{% static 'js/form-handler.js' %}"></script>
 {% endblock custom_scripts %}
 
 {% block content %}
@@ -68,7 +68,14 @@
             <input type="radio" name="headers-only" id="headers-only" value="1" class="form-check-input">
             <label class="form-check-label" for="headers-only">Save Headers Only</label>
         </div>
-        <input type="submit" class="btn btn-success mt-3" value="Save">
+        <div class="pt-3">
+            <button type="submit" class="btn btn-success btn-icon-split">
+                <span class="icon text-white-50">
+                    <i class="fas fa-cog"></i>
+                </span>
+                <span class="text">Submit</span>
+            </button>
+        </div>
         <div class="save-status alert alert-danger d-none">List Upload Failed</div>
         <div class="progress d-none mt-3 w-25">
             <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"

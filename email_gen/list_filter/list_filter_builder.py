@@ -125,6 +125,7 @@ def build_filter(fields):
     """
     list_filters = {}
     for field in fields:
+
         if 'date' in field:
             range_key = field + '_range_filter'
             range_label = 'Date Range: ' + field

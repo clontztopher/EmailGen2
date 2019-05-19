@@ -9,6 +9,10 @@ class SourceListModel(models.Model):
     update_date = models.DateField(auto_now=True)
     field_labels = models.CharField(blank=True, max_length=1000)
 
+    @classmethod
+    def get_list_options(cls):
+        return [('None', 'None')] + [(source.display_name, source.display_name) for source in cls.objects.all()]
+
     def get_meta(self):
         return self.field_labels.split('::') if self.field_labels != '' else None
 

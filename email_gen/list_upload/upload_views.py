@@ -1,23 +1,29 @@
 import os
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
-from .upload_form import SourceListUploadForm
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
+
+from .upload_form import SourceListUploadForm
 from ..models import SourceListModel, Person
 from .person_builder import build_person
 from ..file_storage.file_storage import get_list_sample, get_source_bucket, get_file_reader
 
 
+@login_required
 def upload_list(request, file_name=None):
-    available_lists = SourceListModel.objects.all()
-    display_name = None
-    if file_name:
-        display_name = available_lists.get(file_name=file_name).display_name
     if request.method == 'POST':
         form = SourceListUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
-            display_name = form.cleaned_data['list_name']
+            if form.cleaned_data['existing_lists'] != 'None':
+                display_name = form.cleaned_data['existing_lists']
+            elif form.cleaned_data['new_list'] != '':
+                display_name = form.cleaned_data['new_list']
+            else:
+                display_name = 'Untitled List'
+
             file_ext = os.path.splitext(request.FILES['file'].name)[-1]
             file_name = display_name.replace(' ', '-') + file_ext
 
@@ -30,15 +36,22 @@ def upload_list(request, file_name=None):
             blob = bucket.blob(file_name)
             blob.upload_from_file(request.FILES['file'])
 
-            return redirect('/list-config/%s/' % file_name)
+            return JsonResponse({'status': 200, 'fileName': file_name})
 
-    form = SourceListUploadForm(initial={'list_name': display_name})
-    return render(request, 'email_gen/upload-form.html', {
-        'form': form,
-        'available_lists': available_lists
-    })
+        else:
+            print(str(form.errors))
+
+    display_name = None
+
+    if file_name and SourceListModel.objects.filter(file_name=file_name).exists():
+        display_name = SourceListModel.objects.get(file_name=file_name).display_name
+
+    form = SourceListUploadForm(initial={'existing_lists': display_name})
+
+    return render(request, 'email_gen/upload-form.html', {'form': form})
 
 
+@login_required
 def list_config(request, file_name):
     sample = get_list_sample(file_name)
     source_instance = SourceListModel.objects.get(file_name=file_name)
@@ -61,6 +74,7 @@ def list_config(request, file_name):
     })
 
 
+@login_required
 def list_save(request):
     if request.method == 'POST':
         # Data prep
@@ -99,6 +113,9 @@ def list_save(request):
             print('chunk added')
         print('Data save complete')
 
-    return JsonResponse({
-        'status': 200
-    })
+        return JsonResponse({
+            'status': 200,
+            'fileName': source_instance.file_name
+        })
+
+    raise PermissionDenied

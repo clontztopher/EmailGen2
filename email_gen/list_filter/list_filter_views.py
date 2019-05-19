@@ -7,7 +7,7 @@ from ..list_filter.list_filter_builder import build_filter
 
 def download_form(request, file_name):
     source_instance = SourceListModel.objects.get(file_name=file_name)
-    fields = source_instance.get_meta()
+    fields = [field for field in source_instance.get_meta() if field != 'None']
     has_query = bool(request.GET)
 
     # Build filter class based on fields and instantiate

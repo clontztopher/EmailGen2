@@ -1,5 +1,5 @@
 {% if file_list %}
-    <div class="col-lg-6 col-xl-4 mb-4">
+    <div class="col-md-6 mb-4">
         {% for file in file_list %}
             <div class="card border-left-primary shadow list-card mb-2">
                 <div class="card-body">
@@ -9,26 +9,33 @@
                                 {{ file.update_date }}
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                <a href="{% url 'download_form' file.file_name %}">
-                                    {{ file.display_name }}
-                                </a>
+                                {{ file.display_name }}
                             </div>
                         </div>
                         <div class="col-auto">
                             <a href="{% url 'upload_list' file.file_name %}"
-                               class="btn btn-primary btn-circle btn-sm mr-1"
+                               class="btn btn-info btn-icon-split btn-sm mr-1"
                                title="Upload List">
-                                <i class="fas fa-arrow-up"></i>
+                                <span class="icon text-white-50">
+                                     <i class="fas fa-file-upload"></i>
+                                </span>
+                                <span class="text">Upload</span>
                             </a>
                             <a href="{% url 'list_config' file.file_name %}"
-                               class="btn btn-primary btn-circle btn-sm mr-1"
+                               class="btn btn-primary btn-icon-split btn-sm mr-1"
                                title="Configure Headers">
-                                <i class="fas fa-cog"></i>
+                                <span class="icon text-white-50">
+                                     <i class="fas fa-cog"></i>
+                                </span>
+                                <span class="text">Configure</span>
                             </a>
                             <a href="{% url 'download_form' file.file_name %}"
-                               class="btn btn-primary btn-circle btn-sm"
+                               class="btn btn-success btn-icon-split btn-sm"
                                title="Filter List">
-                                <i class="fas fa-filter"></i>
+                                 <span class="icon text-white-50">
+                                     <i class="fas fa-filter"></i>
+                                </span>
+                                <span class="text">Download</span>
                             </a>
                         </div>
                     </div>

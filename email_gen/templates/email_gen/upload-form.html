@@ -1,7 +1,12 @@
 {% extends 'template.html' %}
 
-{% block content %}
+{% load static %}
 
+{% block custom_scripts %}
+    <script src="{% static 'js/form-handler.js' %}"></script>
+{% endblock custom_scripts %}
+
+{% block content %}
     <!-- Content Row -->
     <div class="row">
 
@@ -13,28 +18,26 @@
                     <h6 class="m-0 font-weight-bold text-primary">Upload List</h6>
                 </div>
                 <div class="card-body">
-                    <div class="form-group">
-                        <label for="current-lists">Existing Lists</label>
-                        <select name="current-lists" id="current-lists" class="form-control">
-                            <option value="">---------------</option>
-                            {% for source_list in available_lists %}
-                                <option value="{{ source_list.display_name }}">
-                                    {{ source_list.display_name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
                     <form enctype="multipart/form-data" action="/upload/" method="POST" id="upload-form">
                         {% csrf_token %}
                         <div class="form-group">
-                            {{ form.list_name.label_tag }}
-                            {{ form.list_name }}
+                            {{ form.existing_lists.label_tag }}
+                            {{ form.existing_lists }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.new_list.label_tag }}
+                            {{ form.new_list }}
                         </div>
                         <div class="form-group">
                             {{ form.file.label_tag }}
                             {{ form.file }}
                         </div>
-                        <input class="btn btn-primary" type="submit" value="Submit">
+                        <button type="submit" class="btn btn-success btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fas fa-cog"></i>
+                            </span>
+                            <span class="text">Submit</span>
+                        </button>
                     </form>
                 </div>
             </div>
