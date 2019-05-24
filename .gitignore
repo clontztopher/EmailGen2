@@ -1,7 +1,6 @@
 
 settings.py
 email_gen/uploads/*
-app.yaml
 cloud_sql_proxy
 **.csv
 env
