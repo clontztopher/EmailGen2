@@ -1,37 +1,45 @@
 import csv
 from django.http import HttpResponse
 from django.shortcuts import render
-from ..models import SourceListModel
-from ..list_filter.list_filter_builder import build_filter
+from django.contrib.auth.decorators import login_required
+from ..models import SourceListModel, temp_get_from_id
+from .list_filter_builder import build_filter
 
 
-def download_form(request, file_name):
-    source_instance = SourceListModel.objects.get(file_name=file_name)
-    fields = [field for field in source_instance.get_meta() if field != 'None']
+@login_required()
+def download_form(request, file_id):
+    source_instance = SourceListModel.objects.get(file_id=file_id)
+    fields = source_instance.get_meta()
+    # Check to see if query params are present
+    # since we don't want to download a CSV
+    # of the whole list on initial page visit
     has_query = bool(request.GET)
 
     # Build filter class based on fields and instantiate
-    ListFilter = build_filter(fields)
-    f = ListFilter(request.GET, queryset=source_instance.people.all())
+    list_filter_class = build_filter(fields)
+
+    # Create filter using an 'all' query set
+    licensee_class = temp_get_from_id(file_id)
+    f = list_filter_class(request.GET, queryset=licensee_class.objects.all())
 
     if has_query:
-        # Create CSV response and prepare file name
+        # Create CSV response with file name from user input
         download_name = request.GET['filename']
         if download_name == '':
-            download_name = source_instance.display_name.replace(' ', '')
+            download_name = source_instance.file_id
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="%s.csv"' % download_name
 
         # Create a dict writer instance using list fields
         # as header and response as the write target
-        writer = csv.DictWriter(response, fields)
+        writer = csv.DictWriter(response, fields, extrasaction='ignore')
         writer.writeheader()
 
         # Loop over the query set values and write each row
         # filtering out unused fields beforehand
         for person_dict in f.qs.values():
-            writer.writerow({name: value for name, value in person_dict.items() if name in fields})
+            writer.writerow({name: value for name, value in person_dict.items()})
 
         return response
 

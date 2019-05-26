@@ -1,3 +1,6 @@
+// General form handler to stop propagation, call the passed-in handler
+// and disable submit button. Also re-enables the submit button once
+// ajax request has completed
 function setFormHandler(formHandler) {
     let $form = $('form');
     let $submitBtn = $('button[type=submit]');
@@ -19,25 +22,7 @@ function setFormHandler(formHandler) {
     });
 }
 
-if ($('form#save-list').length) {
-    setFormHandler(function (formData) {
-        return $.ajax({
-            url: '/list-save/',
-            type: 'POST',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false
-        }).then(function (data) {
-            if (data.status == 200) {
-                window.location = '/download-form/' + data.fileName + '/';
-            }
-        })
-    });
-}
-
 if ($('form#upload-form').length) {
-
     // Set the form handler
     setFormHandler(function (formData) {
         return $.ajax({
@@ -53,11 +38,8 @@ if ($('form#upload-form').length) {
             }
         })
     });
-
-    // Set select to 'None' when adding a new list in case a list
-    // was already selected previously
-    let $listSelect = $('#id_existing_lists');
-    $('#id_new_list').on('keydown', function (e) {
-        $listSelect.find('option:eq(0)').prop('selected', true);
-    });
 }
+
+
+
+

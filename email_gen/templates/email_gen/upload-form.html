@@ -21,12 +21,8 @@
                     <form enctype="multipart/form-data" action="/upload/" method="POST" id="upload-form">
                         {% csrf_token %}
                         <div class="form-group">
-                            {{ form.existing_lists.label_tag }}
-                            {{ form.existing_lists }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.new_list.label_tag }}
-                            {{ form.new_list }}
+                            {{ form.list_id.label_tag }}
+                            {{ form.list_id }}
                         </div>
                         <div class="form-group">
                             {{ form.file.label_tag }}

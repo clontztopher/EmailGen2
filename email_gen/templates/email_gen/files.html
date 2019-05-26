@@ -5,7 +5,7 @@
                 <div class="card-body p-3">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 updated">
                                 {{ file.update_date }}
                             </div>
                             <div class="h6 mb-0 font-weight-bold text-gray-800">
@@ -13,23 +13,7 @@
                             </div>
                         </div>
                         <div class="col-auto">
-                            <a href="{% url 'upload_list' file.file_name %}"
-                               class="btn btn-info btn-icon-split btn-sm mr-1"
-                               title="Upload List">
-                                <span class="icon text-white-50">
-                                     <i class="fas fa-file-upload"></i>
-                                </span>
-                                <span class="text">Upload</span>
-                            </a>
-                            <a href="{% url 'list_config' file.file_name %}"
-                               class="btn btn-primary btn-icon-split btn-sm mr-1"
-                               title="Configure Headers">
-                                <span class="icon text-white-50">
-                                     <i class="fas fa-cog"></i>
-                                </span>
-                                <span class="text">Configure</span>
-                            </a>
-                            <a href="{% url 'download_form' file.file_name %}"
+                            <a href="{% url 'download_form' file.file_id %}"
                                class="btn btn-success btn-icon-split btn-sm"
                                title="Filter List">
                                  <span class="icon text-white-50">
@@ -37,6 +21,12 @@
                                 </span>
                                 <span class="text">Download</span>
                             </a>
+                            <button id="{{ file.file_id }}" class="btn btn-primary btn-icon-split btn-sm save-list">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-cog"></i>
+                                </span>
+                                <span class="text">Refresh List</span>
+                            </button>
                         </div>
                     </div>
                 </div>

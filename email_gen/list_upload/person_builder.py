@@ -1,10 +1,9 @@
 import pandas as pd
 from nameparser import HumanName
-from ..models import Person
-from ..constants import TREC_LIC_STATUS_MAP
+from ..constants import TREC_LIC_STATUS
 
 
-def build_person(source_instance, person_data, field_labels):
+def make_licensee(source_instance, person_data, field_labels):
     person = Person(source_list=source_instance)
     # Loop over the line/person data and add values to the
     # Person instance for database insertion
@@ -33,10 +32,6 @@ def build_person(source_instance, person_data, field_labels):
         # Strip spaces if string
         if type(val) == str:
             val = val.strip()
-
-        # Conversions for license status
-        if field_label == 'lic_status':
-            val = TREC_LIC_STATUS_MAP.get(val, val)
 
         # Oklahoma license type conversion
         if field_label == 'lic_type':

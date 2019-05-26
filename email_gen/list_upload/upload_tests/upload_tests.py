@@ -2,8 +2,6 @@ import pandas as pd
 from django.test import TestCase, Client
 from django.core.files import File
 
-from ...models.model_utils import get_models
-
 
 class UploadTests(TestCase):
 
