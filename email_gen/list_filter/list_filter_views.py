@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from ..models import SourceListModel, temp_get_from_id, RealEstateSalesAgentTexas
 from .list_filter_builder import build_filter
-from .filter_form_trec import FilterFormTREC
+from .filters_trec import FilterFormTREC
 
 
 @login_required
@@ -77,7 +77,7 @@ def filter_trec(request):
 
         return response
 
-    return render(request, 'email_gen/list-filter.html', {
-        'filter': f,
+    return render(request, 'email_gen/list-filter-trec.html', {
+        'form': f.form,
         'source_instance': source_instance
     })
