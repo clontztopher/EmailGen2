@@ -26,7 +26,7 @@ class FileStorageService:
     def get_blob(self, file_id):
         return self.bucket.get_blob(self.get_file_path(file_id))
 
-    def get_file_reader(self, file_id, chunksize=5000):
+    def get_file_reader(self, file_id, chunksize=4000):
         # Get file blob
         blob = self.get_blob(file_id)
 
@@ -48,8 +48,6 @@ class FileStorageService:
     def save_file(self, file_id):
         """
         Save file from zip archive at URL location
-        :param file_id:
-        :return: None
         """
         source_instance = SourceListModel.objects.get(file_id=file_id)
         # URL of zip file

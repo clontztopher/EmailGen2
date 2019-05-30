@@ -43,7 +43,10 @@ class InspectorTexas(Licensee):
             licensee['lic_date_exp'] = date_exp
 
             # Change county code to int
-            licensee['trec_county'] = int(licensee['trec_county'])
+            try:
+                licensee['trec_county'] = int(licensee['trec_county'])
+            except:
+                licensee['trec_county'] = 0
 
             # Add source
             licensee['source_list'] = source_instance

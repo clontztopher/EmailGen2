@@ -5,12 +5,10 @@ from ..models import SourceListModel, temp_get_from_id
 def save_list(file_id):
     """
     Saves list from bucket to database
-    :param file_id:
-    :return: None
     """
     source_instance = SourceListModel.objects.get(file_id=file_id)
     storage_service = FileStorageService()
-    reader = storage_service.get_file_reader(file_id, chunksize=5000)
+    reader = storage_service.get_file_reader(file_id, chunksize=30000)
 
     # Feels dirty, need to fix somehow
     licensee_class = temp_get_from_id(file_id)
@@ -31,6 +29,7 @@ def save_list(file_id):
                 licensees.append(licensee)
 
         licensee_class.objects.bulk_create(licensees)
+        print('Chunk added, count: ' + str(len(licensees)))
 
     # Return source update date in case
     # caller wants to display it somewhere
