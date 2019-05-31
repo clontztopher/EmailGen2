@@ -26,6 +26,7 @@ class RealEstateSalesAgentTexas(Licensee):
         # a function that will use them
         field_labels = source_instance.get_meta()
 
+        # Curried closure that makes the licensee using field_labels variable
         def make_licensee(licensee: collections.namedtuple, source_instance):
             # Convert licensee from named tuple to dict with list fields
             licensee = dict(zip(field_labels, licensee))

@@ -1,10 +1,9 @@
 from django.urls import path
 from .views import index, fetch_and_save
-from .list_filter.list_filter_views import download_form
 from .file_storage.file_storage_api import save_source
 from .list_save.list_save_api import list_save
 from .list_upload.upload_views import upload_list
-from .list_filter.list_filter_views import filter_trec
+from .list_filter.list_filter_views import download_form
 
 urlpatterns = [
     path('', index, name="index"),
@@ -14,6 +13,5 @@ urlpatterns = [
     path('save-list/<str:file_id>/', list_save, name="list_save"),
     path('upload/', upload_list, name="upload_list"),
     # Download View
-    path('download-form/<str:file_id>/', download_form, name="download_form"),
-    path('download-trec/', filter_trec, name="filter_trec")
+    path('download-form/<str:file_id>/', download_form, name="download_form")
 ]

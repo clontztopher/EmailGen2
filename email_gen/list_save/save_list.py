@@ -1,24 +1,27 @@
-from ..file_storage.file_storage import FileStorageService
-from ..models import SourceListModel, temp_get_from_id
+from ..models import SourceListModel
+from ..controllers import get_resources_for
 
 
-def save_list(file_id):
+def save_list(file_id, reader):
     """
-    Saves list from bucket to database
+    Saves list from reader to database
     """
     source_instance = SourceListModel.objects.get(file_id=file_id)
-    storage_service = FileStorageService()
-    reader = storage_service.get_file_reader(file_id, chunksize=30000)
 
     # Feels dirty, need to fix somehow
-    licensee_class = temp_get_from_id(file_id)
+    licensee_class = get_resources_for(file_id)['model']
+
+    # Delete licensees for current list and start fresh
     licensee_class.objects.all().delete()
+    # Create a licensee-maker function
     make_licensee = licensee_class.licensee_maker(source_instance)
 
     # Loop over dataframe that is a chunk of lines in the file
     # and create a 'people' list to bulk create instances
     for chunk in reader:
+        # Can't save Pandas NaT Type so convert to empty string
         chunk = chunk.fillna('')
+        # Container for model objects
         licensees = []
 
         # Loop over the lines in the file data chunk
@@ -28,6 +31,7 @@ def save_list(file_id):
             if licensee:
                 licensees.append(licensee)
 
+        # Bulk create the list of new licensee objects
         licensee_class.objects.bulk_create(licensees)
         print('Chunk added, count: ' + str(len(licensees)))
 

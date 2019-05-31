@@ -1,16 +1,16 @@
 import django_filters
-from .list_filter_builder import dates_match, filter_trec_region, filter_emails_in, filter_emails_out
-from ..constants import TREC_LIC_TYPES, TREC_LIC_STATUS, TREC_ED_STATUS, TREC_MCE_STATUS, TREC_COUNTY_CODES_BY_REGION, \
+from email_gen.list_filter.list_filter_methods import dates_match, filter_trec_region, filter_emails_in, \
+    filter_emails_out
+from email_gen.constants import TALCB_LIC_TYPES, TREC_LIC_STATUS, TREC_ED_STATUS, TREC_MCE_STATUS, \
+    TREC_COUNTY_CODES_BY_REGION, \
     TREC_COUNTY_CODES
 
 
-class FilterFormTREC(django_filters.FilterSet):
+class FilterFormAPTX(django_filters.FilterSet):
     def __init__(self, *args, **kwargs):
-        super(FilterFormTREC, self).__init__(*args, **kwargs)
+        super(FilterFormAPTX, self).__init__(*args, **kwargs)
         self.form.fields['lic_type'].widget.attrs['class'] = 'form-control'
         self.form.fields['lic_status'].widget.attrs['class'] = 'form-control'
-        self.form.fields['sae_status'].widget.attrs['class'] = 'form-control'
-        self.form.fields['ce_status'].widget.attrs['class'] = 'form-control'
         self.form.fields['trec_county'].widget.attrs['class'] = 'form-control'
         self.form.fields['trec_region'].widget.attrs['class'] = 'form-control'
         self.form.fields['exp_date_range'].widget.widgets[0].attrs['class'] = 'datepicker form-control'
@@ -19,7 +19,7 @@ class FilterFormTREC(django_filters.FilterSet):
 
     lic_type = django_filters.MultipleChoiceFilter(
         field_name='lic_type',
-        choices=TREC_LIC_TYPES
+        choices=TALCB_LIC_TYPES
     )
 
     lic_status = django_filters.MultipleChoiceFilter(

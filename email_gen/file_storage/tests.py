@@ -32,7 +32,7 @@ class FileStorageTests(TestCase):
         self.assertNotEqual(initial_version, new_version)
 
     def test_storage_service_get_reader(self):
-        reader = self.storage_service.get_file_reader('intx')
+        reader = self.storage_service.reader_from_bucket('intx')
         self.assertTrue(type(next(reader)) == pd.DataFrame)
 
     def test_file_fetch_api_success(self):

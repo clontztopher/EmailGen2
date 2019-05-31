@@ -10,6 +10,14 @@ class FileStorageService:
     """
     Works with Google Cloud Storage to retrieve and save source files
     """
+    DEFAULT_READER_OPTS = {
+        'filepath_or_buffer': None,
+        'sep': '\t',
+        'encoding': 'latin',
+        'header': None,
+        'chunksize': 30000,
+        'dtype': str
+    }
 
     def __init__(self):
         # Create a storage client and get the bucket
@@ -26,26 +34,11 @@ class FileStorageService:
     def get_blob(self, file_id):
         return self.bucket.get_blob(self.get_file_path(file_id))
 
-    def get_file_reader(self, file_id, chunksize=4000):
-        # Get file blob
-        blob = self.get_blob(file_id)
+    def get_reader(self, **opts):
+        # Merge default options and opts before sending in as kwargs
+        return pd.read_csv(**{**self.DEFAULT_READER_OPTS, **opts})
 
-        # Save the byte string in a variable and create a read stream
-        blob_string = blob.download_as_string()
-        file = io.BytesIO(blob_string)
-
-        # Create a file stream reader
-        reader = pd.read_csv(
-            filepath_or_buffer=file,
-            sep='\t',
-            encoding='latin',
-            header=None,
-            chunksize=chunksize,
-            dtype=str
-        )
-        return reader
-
-    def save_file(self, file_id):
+    def fetch_file(self, file_id):
         """
         Save file from zip archive at URL location
         """
@@ -59,32 +52,19 @@ class FileStorageService:
         # Send bytes from response content to zip file
         zip_file = zipfile.ZipFile(io.BytesIO(r.content))
 
-        # Access member
+        # Access member and upload to storage bucket
         with zip_file.open(zip_file_name) as txt_file:
             blob = self.get_blob(file_id)
             blob.upload_from_file(txt_file)
 
-# def get_list_sample(file_id):
-#     # Grab the storage bucket
-#     bucket = get_source_bucket()
-#
-#     # Build path to source files in bucket
-#     file_path = get_file_path(file_id)
-#
-#     # Get file blob
-#     blob = bucket.get_blob(file_path)
-#
-#     # Save the byte string in a variable and create a read stream
-#     blob_string = blob.download_as_string()
-#     file = io.BytesIO(blob_string)
-#
-#     # Create a file stream reader
-#     reader = pd.read_csv(
-#         filepath_or_buffer=file,
-#         sep='\t',
-#         encoding='latin',
-#         header=None,
-#         dtype=str
-#     )
-#     head = reader.head().fillna('')
-#     return [content.tolist() for label, content in head.iteritems()]
+    # Use for getting files from bucket to save data in db
+    def get_file_stream(self, file_id):
+        # Get blob
+        blob = self.get_blob(file_id)
+
+        # Save the byte string in a variable and create a read stream
+        blob_string = blob.download_as_string()
+        return io.BytesIO(blob_string)
+
+    def get_reader_from_stream(self, file_id):
+        return self.get_reader(filepath_or_buffer=self.get_file_stream(file_id))
