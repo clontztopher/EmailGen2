@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from email_gen.models import SourceListModel
-from email_gen.controllers import get_resources_for
+from email_gen.sources_conf import get_resources_for
 
 
 @login_required

@@ -1,15 +1,13 @@
-from ..models import SourceListModel
-from ..controllers import get_resources_for
+from .. import models
+from ..sources_conf import SOURCE_CONFIG
 
 
-def save_list(file_id, reader):
+def save_source(file_id, reader):
     """
     Saves list from reader to database
     """
-    source_instance = SourceListModel.objects.get(file_id=file_id)
-
-    # Feels dirty, need to fix somehow
-    licensee_class = get_resources_for(file_id)['model']
+    source_instance = models.SourceListModel.objects.get(file_id=file_id)
+    licensee_class = getattr(models, SOURCE_CONFIG[file_id]['model'])
 
     # Delete licensees for current list and start fresh
     licensee_class.objects.all().delete()
@@ -27,7 +25,7 @@ def save_list(file_id, reader):
         # Loop over the lines in the file data chunk
         # creating a Person instance from each
         for licensee_data in chunk.itertuples(index=False, name='Licensee'):
-            licensee = make_licensee(licensee_data, source_instance)
+            licensee = make_licensee(licensee_data)
             if licensee:
                 licensees.append(licensee)
 

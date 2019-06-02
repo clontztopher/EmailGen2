@@ -1,8 +1,9 @@
 import collections
 from django.db import models
-import pandas as pd
 from .licensee import Licensee
 from ..constants import TREC_LIC_TYPES
+from .transforms import name_transform, date_transformer
+from ..utils import compose
 
 
 class RealEstateSalesAgentApplicantTexas(Licensee):
@@ -16,25 +17,17 @@ class RealEstateSalesAgentApplicantTexas(Licensee):
         # Get the field labels to cache them and return
         # a function that will use them
         field_labels = source_instance.get_meta()
+        pipeline = compose(
+            name_transform,
+            date_transformer('app_date_orig'),
+            date_transformer('app_date_exp')
+        )
 
-        def make_licensee(licensee: collections.namedtuple, source_instance):
+        def make_licensee(licensee: collections.namedtuple):
             # Don't need first value
             licensee = licensee[1:]
-            # Convert licensee from named tuple to dict with list fields
-            licensee = dict(zip(field_labels, licensee))
-            # Convert date strings to dates and check if they are null.
-            # If null, supply None as field value so it can be entered
-            # in database as such since the database library doesn't
-            # recognize Pandas NaTType
-            date_orig = pd.to_datetime(licensee['app_date_orig'])
-            if pd.isnull(date_orig):
-                date_orig = None
-            licensee['app_date_orig'] = date_orig
+            licensee = pipeline(licensee)
 
-            date_exp = pd.to_datetime(licensee['app_date_exp'])
-            if pd.isnull(date_exp):
-                date_exp = None
-            licensee['app_date_exp'] = date_exp
             # Add source
             licensee['source_list'] = source_instance
 
