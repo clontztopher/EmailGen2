@@ -26,6 +26,8 @@ class RealEstateSalesAgentApplicantTexas(Licensee):
         def make_licensee(licensee: collections.namedtuple):
             # Don't need first value
             licensee = licensee[1:]
+            # Convert licensee from named tuple to dict with list fields
+            licensee = dict(zip(field_labels, licensee))
             licensee = pipeline(licensee)
 
             # Add source

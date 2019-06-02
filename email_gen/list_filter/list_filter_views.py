@@ -2,19 +2,22 @@ import csv
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from email_gen.models import SourceListModel
-from email_gen.sources_conf import get_resources_for
+from .. import models
+from email_gen import list_filter
+from email_gen.sources_conf import SOURCE_CONFIG
 
 
 @login_required
 def download_form(request, file_id):
-    source_instance = SourceListModel.objects.get(file_id=file_id)
+    source_instance = models.SourceListModel.objects.get(file_id=file_id)
     fields = source_instance.get_meta()
 
     # Collect needed data and classes
-    licensee_model, form_template, form_class = get_resources_for(file_id).values()
+    licensee_model_name, form_template, form_class_name = SOURCE_CONFIG[file_id].values()
 
     # Create django-filter form from form class
+    form_class = getattr(list_filter, form_class_name)
+    licensee_model = getattr(models, licensee_model_name)
     f = form_class(request.GET, queryset=licensee_model.objects.all())
 
     if bool(request.GET):
