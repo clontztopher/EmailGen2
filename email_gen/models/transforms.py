@@ -6,7 +6,7 @@ def name_transform(licensee: dict):
     if licensee['fullname'] != '':
         fullname = HumanName(licensee['fullname'])
         fullname.capitalize()
-        licensee['fullname'] = getattr(fullname, 'full_name')
+        licensee['fullname'] = str.title(getattr(fullname, 'full_name'))
         licensee['firstname'] = getattr(fullname, 'first', '')
         licensee['middlename'] = getattr(fullname, 'middle', '')
         licensee['lastname'] = getattr(fullname, 'last', '')

@@ -35,4 +35,5 @@ def save_source(file_id, reader):
 
     # Return source update date in case
     # caller wants to display it somewhere
+    source_instance.save()
     return source_instance.update_date

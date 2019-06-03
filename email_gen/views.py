@@ -8,7 +8,7 @@ from .list_save.save_list import save_source
 
 @login_required
 def index(request):
-    file_list = SourceListModel.objects.all()
+    file_list = SourceListModel.objects.order_by('display_name')
     return render(request, 'index.html', {'file_list': file_list})
 
 
