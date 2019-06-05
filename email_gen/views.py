@@ -1,9 +1,33 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from .models import SourceListModel
 from .file_storage import FileStorageService
 from .list_save.save_list import save_source
+
+from django.contrib.auth.models import User
+from rest_framework import permissions, status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .serializers import UserSerializer, UserSerializerWithToken
+
+
+@api_view(['GET'])
+def current_user(request):
+    """
+    Determine current user and get their data
+    """
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
+
+
+def list_data(request):
+    file_list = SourceListModel.objects \
+        .order_by('display_name') \
+        .values('file_id', 'display_name', 'update_date')
+
+    return JsonResponse(list(file_list), safe=False)
 
 
 @login_required
