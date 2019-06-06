@@ -11,7 +11,7 @@ urlpatterns = [
     path('fetch-save/<str:file_id>/', fetch_and_save, name="fetch_save"),
     path('save-source/<str:file_id>/', save_source, name="save_source"),
     path('save-list/<str:file_id>/', list_save, name="list_save"),
-    path('list-data/', list_data, name="list_data"),
+    path('lists/', list_data, name="list_data"),
     path('upload/', upload_list, name="upload_list"),
     # Download View
     path('download-form/<str:file_id>/', download_form, name="download_form")
