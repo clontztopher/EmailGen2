@@ -22,6 +22,7 @@ def current_user(request):
     return Response(serializer.data)
 
 
+@api_view(['GET'])
 def list_data(request):
     file_list = SourceListModel.objects \
         .order_by('display_name') \
