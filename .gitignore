@@ -1,5 +1,6 @@
 
-settings.py
+
+**/settings/**
 email_gen/uploads/*
 cloud_sql_proxy
 cloud_sql_proxy_start.sh
