@@ -2,12 +2,15 @@ from django.db import models
 
 
 class SourceListModel(models.Model):
+    # ID for short name and URL
     file_id = models.CharField(max_length=60, unique=True)
     display_name = models.CharField(max_length=60, default='Uploaded List', unique=True)
     update_date = models.DateField(auto_now=True)
     field_labels = models.CharField(null=True, max_length=1000)
     source_url = models.URLField(blank=True, null=True)
+    # Name of file inside of zip archive (if zip file)
     zip_file_name = models.CharField(blank=True, null=True, max_length=60)
+    encoding = models.CharField(default='latin', max_length=30)
 
     @classmethod
     def get_list_options(cls):

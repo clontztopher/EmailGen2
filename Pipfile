@@ -16,6 +16,7 @@ pandas = "*"
 psycopg2-binary = "*"
 nameparser = "*"
 google-cloud-storage = "*"
+xlrd = "*"
 
 [requires]
 python_version = "3.7"
