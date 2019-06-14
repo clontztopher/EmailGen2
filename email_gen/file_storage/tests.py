@@ -1,44 +1,50 @@
-import json
+import json, os
+from google.cloud import storage
 import pandas as pd
+from django.conf import settings
 from django.test import TestCase, Client
-from ..models import SourceListModel
 from .file_storage import FileStorageService
 
 
 class FileStorageTests(TestCase):
-    # Use same client and source instance across all tests
+
     @classmethod
     def setUpTestData(cls):
-        cls.client = Client()
-        cls.source_instance = SourceListModel.objects.create(
-            file_id='intx',
-            display_name='Appraiser - TX',
-            source_url='https://www.trec.texas.gov/sites/default/files/high-value-data-sets/inspfile.zip',
-            zip_file_name='inspfile.txt'
-        )
+        storage_client = storage.Client()
+        cls.bucket = storage_client.get_bucket(settings.SOURCE_LIST_STORAGE_BUCKET_NAME)
 
-    # Use new storage service for each test
-    def setUp(self) -> None:
-        self.storage_service = FileStorageService()
+    def test_storage_service_creates_blob(self):
+        storage_service = FileStorageService()
+        intx = storage_service.get_or_create_blob('test.csv')
+        self.assertIsNotNone(intx)
+        self.assertTrue(isinstance(intx, storage.Blob))
 
-    def test_storage_service_save_file(self):
-        # Get version of current file
-        initial_version = self.storage_service.get_blob('intx').generation
-        # Save file
-        self.storage_service.save_file('intx')
-        # Get new version
-        new_version = self.storage_service.get_blob('intx').generation
+    def test_storage_service_saves_csv(self):
+        storage_service = FileStorageService()
+        file_name = 'okce-mock.csv'
+        path = os.path.join(settings.MOCK_FILE_LOCATION, file_name)
 
-        self.assertNotEqual(initial_version, new_version)
+        with open(path) as file:
+            file_blob = storage_service.store_file(file, file_name)
+            self.assertIsNotNone(file_blob)
+            self.assertTrue(isinstance(file_blob, storage.Blob))
 
-    def test_storage_service_get_reader(self):
-        reader = self.storage_service.reader_from_bucket('intx')
-        self.assertTrue(type(next(reader)) == pd.DataFrame)
+    def test_storage_service_saves_txt(self):
+        storage_service = FileStorageService()
+        file_name = 'inspfile-mock.txt'
+        path = os.path.join(settings.MOCK_FILE_LOCATION, file_name)
 
-    def test_file_fetch_api_success(self):
-        res = self.client.get('/save-source/intx/')
-        self.assertEqual(json.loads(res.content), {'message': 'success'})
+        with open(path) as file:
+            file_blob = storage_service.store_file(file, file_name)
+            self.assertIsNotNone(file_blob)
+            self.assertTrue(isinstance(file_blob, storage.Blob))
 
-    def test_file_fetch_api_fail(self):
-        res = self.client.get('/save-source/test/')
-        self.assertEqual(json.loads(res.content), {'message': "No source data for list id 'test'"})
+    def test_storage_service_saves_xlsx(self):
+        storage_service = FileStorageService()
+        file_name = 'okce-mock.xlsx'
+        path = os.path.join(settings.MOCK_FILE_LOCATION, file_name)
+
+        with open(path) as file:
+            file_blob = storage_service.store_file(file, file_name)
+            self.assertIsNotNone(file_blob)
+            self.assertTrue(isinstance(file_blob, storage.Blob))

@@ -14,7 +14,7 @@ def upload_list(request):
         if form.is_valid():
             list_id = form.cleaned_data['list_id']
             storage_service = FileStorageService(list_id)
-            storage_service.save_from_zip(request.FILES['file'])
+            storage_service.save_file(request.FILES['file'])
             reader = storage_service.get_reader_from_stream()
             save_source(list_id, reader)
 

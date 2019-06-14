@@ -51,8 +51,6 @@ TALCB_LIC_TYPES = [
     ('APTR', 'TALCB - Appraiser Trainee')
 ]
 
-# OREC
-
 # County Codes field based on TREC/TALCB counties
 # https://www.trec.texas.gov/sites/default/files/high-value-data-sets/county.txt
 TREC_COUNTY_CODES = [
