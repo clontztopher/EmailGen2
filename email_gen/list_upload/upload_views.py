@@ -12,10 +12,11 @@ def upload_list(request):
         form = SourceListUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
+            file = request.FILES['file']
             list_id = form.cleaned_data['list_id']
-            storage_service = FileStorageService(list_id)
-            storage_service.save_file(request.FILES['file'])
-            reader = storage_service.get_reader_from_stream()
+            storage_service = FileStorageService()
+            storage_service.store_file(file, file.name)
+            reader = storage_service.stream_reader(file.name)
             save_source(list_id, reader)
 
             # Return JSON for POST AJAX request

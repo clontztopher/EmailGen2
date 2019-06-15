@@ -34,7 +34,7 @@ if ($('form#upload-form').length) {
             processData: false
         }).then(function (data) {
             if (data.status == 200) {
-                window.location = '/list-config/' + data.fileName + '/';
+                window.location = '/';
             }
         })
     });

@@ -1,4 +1,4 @@
-import json, os
+import json, os, zipfile
 from google.cloud import storage
 import pandas as pd
 from django.conf import settings
@@ -21,7 +21,7 @@ class FileStorageTests(TestCase):
 
     def test_storage_service_saves_csv(self):
         storage_service = FileStorageService()
-        file_name = 'okce-mock.csv'
+        file_name = 'inspfile.csv'
         path = os.path.join(settings.MOCK_FILE_LOCATION, file_name)
 
         with open(path) as file:
@@ -31,7 +31,7 @@ class FileStorageTests(TestCase):
 
     def test_storage_service_saves_txt(self):
         storage_service = FileStorageService()
-        file_name = 'inspfile-mock.txt'
+        file_name = 'inspfile.txt'
         path = os.path.join(settings.MOCK_FILE_LOCATION, file_name)
 
         with open(path) as file:
@@ -39,12 +39,7 @@ class FileStorageTests(TestCase):
             self.assertIsNotNone(file_blob)
             self.assertTrue(isinstance(file_blob, storage.Blob))
 
-    def test_storage_service_saves_xlsx(self):
+    def test_gets_reader(self):
         storage_service = FileStorageService()
-        file_name = 'okce-mock.xlsx'
-        path = os.path.join(settings.MOCK_FILE_LOCATION, file_name)
-
-        with open(path) as file:
-            file_blob = storage_service.store_file(file, file_name)
-            self.assertIsNotNone(file_blob)
-            self.assertTrue(isinstance(file_blob, storage.Blob))
+        stream_reader = storage_service.stream_reader('inspfile')
+        self.assertIsNotNone(stream_reader)

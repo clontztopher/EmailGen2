@@ -1,6 +1,5 @@
-import io, zipfile, os, typing
+import io, os
 import pandas as pd
-import requests
 from google.cloud import storage
 from django.conf import settings
 
@@ -9,13 +8,6 @@ class FileStorageService:
     """
     Works with Google Cloud Storage to store and retrieve source files
     """
-
-    # DEFAULT_READER_OPTS = {
-    #     'filepath_or_buffer': None,
-    #     'header': None,
-    #     'chunksize': 30000,
-    #     'dtype': str
-    # }
 
     def __init__(self):
         # Set path for saving/retrieving file
@@ -26,19 +18,20 @@ class FileStorageService:
         self.bucket = storage_client.get_bucket(bucket_name)
 
     def get_or_create_blob(self, file_name) -> storage.Blob:
-        blob = self.bucket.get_blob(self.source_path + file_name)
+        blob_name = self.source_path + file_name
+        blob = self.bucket.get_blob(blob_name)
         if not blob:
-            blob = self.bucket.blob(self.source_path + file_name)
+            blob = self.bucket.blob(blob_name)
         return blob
 
     def store_file(self, file, file_name) -> storage.Blob:
-        name, ext = os.path.splitext(file_name)
-        name = name.split('/')[-1]
+        path, ext = os.path.splitext(file_name)
+        name = path.split('/')[-1]
 
         # Get or create blob for storing the file
-        blob = self.get_or_create_blob(file_name)
+        blob = self.get_or_create_blob(name)
 
-        if not ext in ('.csv', '.txt', '.zip'):
+        if ext not in ('.csv', '.txt'):
             raise Exception(
                 """
                 File type not recognized. Please upload as .csv, .txt. A .zip 
@@ -47,32 +40,20 @@ class FileStorageService:
                 """
             )
 
-        if 'zip' == ext:
-            with zipfile.ZipFile(file) as zip:
-                with zip.open(zip.namelist()[0]) as archive_file:
-                    name, ext = os.path.splitext(file.name)
-                    file = archive_file
+        reader_opts = dict(
+            filepath_or_buffer=file,
+            header=None,
+            dtype=str,
+            sep=',' if ext == '.csv' else '\t'
+        )
 
-        if ext in ('.csv', '.txt'):
-            sep = ',' if ext == '.csv' else '\t'
+        try:
+            df = pd.read_csv(**reader_opts)
+        except:
             try:
-                df = pd.read_csv(
-                    filepath_or_buffer=file,
-                    header=None,
-                    dtype=str,
-                    sep=sep
-                )
+                df = pd.read_csv(**reader_opts, encoding='latin')
             except:
-                try:
-                    df = pd.read_csv(
-                        filepath_or_buffer=file,
-                        encoding='latin-1',
-                        header=None,
-                        dtype=str,
-                        sep=sep
-                    )
-                except:
-                    raise Exception('Unrecognized character encoding.')
+                raise Exception('Unrecognized character encoding.')
 
         csv_str = df.to_csv()
         csv_file = io.StringIO(csv_str)
@@ -80,23 +61,24 @@ class FileStorageService:
 
         return blob
 
-    # def fetch_and_save(self):
-    #     r = requests.get(
-    #         self.source_instance.source_url,
-    #         headers={'User-Agent': 'Mozilla/5.0'}
-    #     )
-    #     self.save_file(r.content)
-
-    # Reader-related
+    def stream_reader(self, file_name):
+        blob = self.get_or_create_blob(file_name)
+        blob_string = blob.download_as_string()
+        blob_stream = io.BytesIO(blob_string)
+        return pd.read_csv(
+            filepath_or_buffer=blob_stream,
+            header=None,
+            chunksize=20000
+        )
 
     # def get_stream_from_bucket(self):
     #     blob = self.get_blob()
     #     blob_string = blob.download_as_string()
     #     return io.BytesIO(blob_string)
-    #
-    # def get_reader(self, **opts):
-    #     # Merge default options and opts before sending in as kwargs
-    #     return pd.read_csv(**{**self.DEFAULT_READER_OPTS, **opts})
+
+    # def get_reader(self, **read_opts):
+    #     # Merge default options and read_opts before sending in as kwargs
+    #     return pd.read_csv(**{**self.DEFAULT_READER_OPTS, **read_opts})
     #
     # def get_reader_from_stream(self):
     #     return self.get_reader(
