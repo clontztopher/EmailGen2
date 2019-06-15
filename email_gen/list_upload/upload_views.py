@@ -15,8 +15,8 @@ def upload_list(request):
             file = request.FILES['file']
             list_id = form.cleaned_data['list_id']
             storage_service = FileStorageService()
-            storage_service.store_file(file, file.name)
-            reader = storage_service.stream_reader(file.name)
+            storage_service.store_file(file.read(), file.name, list_id)
+            reader = storage_service.stream_reader(list_id)
             save_source(list_id, reader)
 
             # Return JSON for POST AJAX request

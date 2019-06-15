@@ -34,6 +34,6 @@ def save_source(file_id, reader):
         print('Chunk added, count: ' + str(len(licensees)))
 
     # Return source update date in case
-    # caller wants to display it somewhere
+    # it needs to be displayed it somewhere
     source_instance.save()
     return source_instance.update_date

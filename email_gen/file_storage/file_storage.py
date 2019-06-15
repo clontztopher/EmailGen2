@@ -1,4 +1,4 @@
-import io, os
+import io, os, csv
 import pandas as pd
 from google.cloud import storage
 from django.conf import settings
@@ -17,71 +17,55 @@ class FileStorageService:
         bucket_name = settings.SOURCE_LIST_STORAGE_BUCKET_NAME
         self.bucket = storage_client.get_bucket(bucket_name)
 
-    def get_or_create_blob(self, file_name) -> storage.Blob:
-        blob_name = self.source_path + file_name
+    def get_or_create_blob(self, storage_id) -> storage.Blob:
+        blob_name = self.source_path + storage_id
         blob = self.bucket.get_blob(blob_name)
         if not blob:
             blob = self.bucket.blob(blob_name)
         return blob
 
-    def store_file(self, file, file_name) -> storage.Blob:
-        path, ext = os.path.splitext(file_name)
-        name = path.split('/')[-1]
-
+    def store_file(self, file_bytes, file_name, storage_id) -> storage.Blob:
         # Get or create blob for storing the file
-        blob = self.get_or_create_blob(name)
+        blob = self.get_or_create_blob(storage_id)
+        # Get file extension for determining how to parse file
+        path, ext = os.path.splitext(file_name)
 
+        # Check that the file type is supported
         if ext not in ('.csv', '.txt'):
             raise Exception(
                 """
-                File type not recognized. Please upload as .csv, .txt. A .zip 
-                archive may also be uploaded as long as the list is the first 
+                File type not recognized. Please upload as .csv, .txt. A .zip
+                archive may also be uploaded as long as the list is the first
                 file in the archive.
                 """
             )
 
-        reader_opts = dict(
-            filepath_or_buffer=file,
-            header=None,
-            dtype=str,
-            sep=',' if ext == '.csv' else '\t'
-        )
-
+        # Save decoded string of the file
         try:
-            df = pd.read_csv(**reader_opts)
-        except:
-            try:
-                df = pd.read_csv(**reader_opts, encoding='latin')
-            except:
-                raise Exception('Unrecognized character encoding.')
+            file_string = file_bytes.decode('utf8')
+        except UnicodeDecodeError:
+            file_string = file_bytes.decode('latin')
 
-        csv_str = df.to_csv()
-        csv_file = io.StringIO(csv_str)
-        blob.upload_from_file(csv_file)
+        # Create file object to be opened by Pandas csv reader
+        temp_file = io.StringIO(file_string)
+        # Get the delimiter based on extension
+        sep = ',' if ext == '.csv' else '\t'
+        # Create a dataframe which parses the string
+        # and cleans it up avoiding some errors
+        df = pd.read_csv(filepath_or_buffer=temp_file, sep=sep)
+        # Convert the data frame to a comma-separated string and upload
+        upload_string = df.to_csv(sep=',')
+        blob.upload_from_string(upload_string)
 
         return blob
 
-    def stream_reader(self, file_name):
-        blob = self.get_or_create_blob(file_name)
+    def stream_reader(self, storage_id) -> pd.DataFrame:
+        blob = self.get_or_create_blob(storage_id)
         blob_string = blob.download_as_string()
         blob_stream = io.BytesIO(blob_string)
         return pd.read_csv(
             filepath_or_buffer=blob_stream,
             header=None,
-            chunksize=20000
+            chunksize=20000,
+            encoding='utf8'
         )
-
-    # def get_stream_from_bucket(self):
-    #     blob = self.get_blob()
-    #     blob_string = blob.download_as_string()
-    #     return io.BytesIO(blob_string)
-
-    # def get_reader(self, **read_opts):
-    #     # Merge default options and read_opts before sending in as kwargs
-    #     return pd.read_csv(**{**self.DEFAULT_READER_OPTS, **read_opts})
-    #
-    # def get_reader_from_stream(self):
-    #     return self.get_reader(
-    #         filepath_or_buffer=self.get_stream_from_bucket(),
-    #         encoding=self.source_instance.encoding
-    #     )
