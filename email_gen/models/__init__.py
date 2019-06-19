@@ -3,3 +3,4 @@ from .appraiser_tx import AppraiserTexas
 from .inspector_tx import InspectorTexas
 from .real_estate_sales_agent_tx import RealEstateSalesAgentTexas
 from .re_license_applicant_tx import RealEstateSalesAgentApplicantTexas
+from .real_estate_sales_agent_ok import RealEstateSalesAgentOklahoma

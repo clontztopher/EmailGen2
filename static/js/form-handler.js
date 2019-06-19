@@ -33,9 +33,9 @@ if ($('form#upload-form').length) {
             contentType: false,
             processData: false
         }).then(function (data) {
-            if (data.status == 200) {
-                window.location = '/';
-            }
+            console.log(data)
+        }).fail(function (err) {
+            console.warn(err)
         })
     });
 }

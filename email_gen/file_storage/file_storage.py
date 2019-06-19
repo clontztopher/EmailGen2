@@ -31,7 +31,7 @@ class FileStorageService:
         path, ext = os.path.splitext(file_name)
 
         # Check that the file type is supported
-        if ext not in ('.csv', '.txt'):
+        if ext not in ('.csv', '.txt', '.xls', '.xlsx'):
             raise Exception(
                 """
                 File type not recognized. Please upload as .csv, .txt. A .zip
@@ -40,24 +40,53 @@ class FileStorageService:
                 """
             )
 
-        # Save decoded string of the file
-        try:
-            file_string = file_bytes.decode('utf8')
-        except UnicodeDecodeError:
-            file_string = file_bytes.decode('latin')
+        if ext in ['.xls', '.xlsx']:
+            excel_file = io.BytesIO(file_bytes)
+            df = pd.read_excel(
+                excel_file,
+                header=None,
+                skiprows=[0],
+                dtype=str
+            )
+            upload_string = df.to_csv(
+                sep=',',
+                header=None,
+                index=False,
+                index_label=False
+            )
+            blob.upload_from_string(upload_string)
+            return blob
 
-        # Create file object to be opened by Pandas csv reader
-        temp_file = io.StringIO(file_string)
-        # Get the delimiter based on extension
-        sep = ',' if ext == '.csv' else '\t'
-        # Create a dataframe which parses the string
-        # and cleans it up avoiding some errors
-        df = pd.read_csv(filepath_or_buffer=temp_file, sep=sep)
-        # Convert the data frame to a comma-separated string and upload
-        upload_string = df.to_csv(sep=',')
-        blob.upload_from_string(upload_string)
+        if ext in ['.csv', '.txt']:
+            # Save decoded string of the file
+            try:
+                file_string = file_bytes.decode('utf8')
+            except UnicodeDecodeError:
+                file_string = file_bytes.decode('latin')
 
-        return blob
+            # Create file object to be opened by Pandas csv reader
+            temp_file = io.StringIO(file_string)
+            # Get the delimiter based on extension
+            sep = ',' if ext == '.csv' else '\t'
+            # Create a dataframe which parses the string
+            # and cleans it up avoiding some errors
+            df = pd.read_csv(
+                filepath_or_buffer=temp_file,
+                sep=sep,
+                header=None,
+                index_col=False,
+                dtype=str
+            )
+            # Convert the data frame to a comma-separated string and upload
+            upload_string = df.to_csv(
+                sep=',',
+                header=False,
+                index=False,
+                index_label=False
+            )
+            blob.upload_from_string(upload_string)
+
+            return blob
 
     def stream_reader(self, storage_id) -> pd.DataFrame:
         blob = self.get_or_create_blob(storage_id)
@@ -67,5 +96,7 @@ class FileStorageService:
             filepath_or_buffer=blob_stream,
             header=None,
             chunksize=20000,
-            encoding='utf8'
+            encoding='utf8',
+            index_col=False,
+            dtype=str
         )

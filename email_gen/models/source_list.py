@@ -10,7 +10,6 @@ class SourceListModel(models.Model):
     source_url = models.URLField(blank=True, null=True)
     # Name of file inside of zip archive (if zip file)
     zip_file_name = models.CharField(blank=True, null=True, max_length=60)
-    encoding = models.CharField(default='latin', max_length=30)
 
     @classmethod
     def get_list_options(cls):

@@ -12,10 +12,13 @@ def upload_list(request):
         form = SourceListUploadForm(request.POST, request.FILES)
 
         if form.is_valid():
+            # Get file from request
             file = request.FILES['file']
             list_id = form.cleaned_data['list_id']
             storage_service = FileStorageService()
-            storage_service.store_file(file.read(), file.name, list_id)
+            # Get bytes from file
+            file_bytes = file.read()
+            storage_service.store_file(file_bytes, file.name, list_id)
             reader = storage_service.stream_reader(list_id)
             save_source(list_id, reader)
 

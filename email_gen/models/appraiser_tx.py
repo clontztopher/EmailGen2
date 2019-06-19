@@ -1,9 +1,8 @@
-import collections
 from django.db import models
 from .licensee import Licensee
 from ..constants import TREC_LIC_STATUS, TALCB_LIC_TYPES
 from ..utils import compose
-from .transforms import name_transform, date_transformer, county_code_transform
+from . import transforms
 
 
 class AppraiserTexas(Licensee):
@@ -16,25 +15,14 @@ class AppraiserTexas(Licensee):
 
     @classmethod
     def licensee_maker(cls, source_instance):
-        # Get the field labels to cache them and return
-        # a function that will use them
-        field_labels = source_instance.get_meta()
-        # Compose the transforms for this model into a pipeline
-        pipeline = compose(
-            name_transform,
-            date_transformer('lic_date_exp'),
-            date_transformer('lic_date_orig'),
-            county_code_transform
+        # Compose transformations
+        return compose(
+            lambda licensee: cls(**licensee),
+            transforms.source_adder(source_instance),
+            transforms.name_transform,
+            transforms.date_transformer('lic_date_exp'),
+            transforms.date_transformer('lic_date_orig'),
+            transforms.county_code_transform,
+            transforms.make_field_stripper(cls),
+            transforms.licensee_zipper(source_instance.get_meta())
         )
-
-        def make_licensee(licensee: collections.namedtuple):
-            # Convert licensee from named tuple to dict with list fields
-            licensee = dict(zip(field_labels, licensee))
-            licensee = pipeline(licensee)
-
-            # Add source
-            licensee['source_list'] = source_instance
-            # Spread the dictionary into kwargs
-            return cls(**licensee)
-
-        return make_licensee

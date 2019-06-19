@@ -1,9 +1,37 @@
 import pandas as pd
 from nameparser import HumanName
+from django.db.models import Model
+from typing import Type
+
+
+def licensee_zipper(field_labels: list):
+    def zip_licensee(licensee_data: list):
+        return dict(zip(field_labels, licensee_data))
+
+    return zip_licensee
+
+
+def make_field_stripper(model: Type[Model]):
+    def strip_extra(licensee: dict):
+        return {
+            k: v for k, v in licensee.items() if k in [
+                f.name for f in model._meta.get_fields()
+            ]
+        }
+
+    return strip_extra
+
+
+def source_adder(source_instance: Type[Model]):
+    def add_source(licensee: dict):
+        licensee['source_list'] = source_instance
+        return licensee
+
+    return add_source
 
 
 def name_transform(licensee: dict):
-    if licensee['fullname'] != '':
+    if licensee.setdefault('fullname', '') != '':
         fullname = HumanName(licensee['fullname'])
         fullname.capitalize()
         licensee['fullname'] = str.title(getattr(fullname, 'full_name'))

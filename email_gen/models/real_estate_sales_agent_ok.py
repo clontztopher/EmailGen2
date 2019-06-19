@@ -1,11 +1,10 @@
-import collections
 from django.db import models
 from .licensee import Licensee
-from .transforms import name_transform, date_transformer
+from . import transforms
 from ..utils import compose
 
 
-class RealEstateSalesAgentTexas(Licensee):
+class RealEstateSalesAgentOklahoma(Licensee):
     # License Fields
     lic_number = models.CharField(blank=True, max_length=20)  # Not guaranteed to be unique across all lists
     lic_status = models.CharField(blank=True, null=True, choices=(("A", "Active"), ("I", "Inactive")), max_length=1)
@@ -14,29 +13,12 @@ class RealEstateSalesAgentTexas(Licensee):
 
     @classmethod
     def licensee_maker(cls, source_instance):
-        # Get the field labels to cache them and return
-        # a function that will use them
-        field_labels = source_instance.get_meta()
-        # Compose the transforms for this model into a pipeline
-        pipeline = compose(
-            name_transform,
-            date_transformer('lic_date_exp'),
+        # Compose transformations
+        return compose(
+            lambda licensee: cls(**licensee),
+            transforms.source_adder(source_instance),
+            transforms.name_transform,
+            transforms.date_transformer('lic_date_exp'),
+            transforms.make_field_stripper(cls),
+            transforms.licensee_zipper(source_instance.get_meta())
         )
-
-        # Curried closure that makes the licensee using field_labels variable
-        def make_licensee(licensee: collections.namedtuple):
-            # Convert licensee from named tuple to dict with list fields
-            # zip only matches up to the end of the shortest list so extraneous
-            # fields at the end may be left off
-            licensee = dict(zip(field_labels, licensee))
-
-            # Run licensee through the transformation pipeline
-            licensee = pipeline(licensee)
-
-            # Add source related field to licensee
-            licensee['source_list'] = source_instance
-
-            # Spread the dictionary into kwargs
-            return cls(**licensee)
-
-        return make_licensee

@@ -1,38 +1,40 @@
 {% if file_list %}
-    <div class="col-lg-8 col-xl-6 mb-4">
+    <div class="col-sm-6 mb-4">
         {% for file in file_list %}
-            <div class="card border-left-primary shadow list-card mb-2">
-                <div class="card-body p-3">
-                    <div class="row no-gutters align-items-center">
-                        <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 updated">
-                                {{ file.update_date }}
+            <a href="{% url 'download_form' file.file_id %}">
+                <div class="card border-left-primary shadow list-card mb-2">
+                    <div class="card-body p-3">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1 updated">
+                                    {{ file.update_date }}
+                                </div>
+                                <div class="h6 mb-0 font-weight-bold text-gray-800">
+                                    {{ file.display_name }}
+                                </div>
                             </div>
-                            <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                {{ file.display_name }}
-                            </div>
-                        </div>
-                        <div class="col-auto mr-2">
-                            <a href="{% url 'download_form' file.file_id %}"
-                               class="btn btn-success btn-icon-split btn-sm"
-                               title="Filter List">
-                                 <span class="icon text-white-50">
-                                     <i class="fas fa-filter"></i>
-                                </span>
-                                <span class="text">Download</span>
-                            </a>
-                        </div>
-                        <div class="col-auto">
-                            <button id="{{ file.file_id }}" class="btn btn-primary btn-icon-split btn-sm save-list">
-                                <span class="icon text-white-50">
-                                    <i class="fas fa-sync-alt"></i>
-                                </span>
-                                <span class="text">Refresh List</span>
-                            </button>
+                            {#                        <div class="col-auto mr-2">#}
+                            {#                            <a href="{% url 'download_form' file.file_id %}"#}
+                            {#                               class="btn btn-success btn-icon-split btn-sm"#}
+                            {#                               title="Filter List">#}
+                            {#                                 <span class="icon text-white-50">#}
+                            {#                                     <i class="fas fa-filter"></i>#}
+                            {#                                </span>#}
+                            {#                                <span class="text">Download</span>#}
+                            {#                            </a>#}
+                            {#                        </div>#}
+                            {#                        <div class="col-auto">#}
+                            {#                            <button id="{{ file.file_id }}" class="btn btn-primary btn-icon-split btn-sm save-list">#}
+                            {#                                <span class="icon text-white-50">#}
+                            {#                                    <i class="fas fa-sync-alt"></i>#}
+                            {#                                </span>#}
+                            {#                                <span class="text">Refresh List</span>#}
+                            {#                            </button>#}
+                            {#                        </div>#}
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
         {% endfor %}
     </div>
 {% endif %}

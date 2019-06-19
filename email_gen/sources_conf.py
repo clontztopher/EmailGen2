@@ -18,5 +18,10 @@ SOURCE_CONFIG = {
         'model': 'RealEstateSalesAgentApplicantTexas',
         'template': 'list-filter-retx-prep',
         'filter_form': 'FilterFormREIApp'
+    },
+    'reok': {
+        'model': 'RealEstateSalesAgentOklahoma',
+        'template': 'list-filter-reok',
+        'filter_form': 'FilterFormREOK'
     }
 }

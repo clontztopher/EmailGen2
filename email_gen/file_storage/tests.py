@@ -40,6 +40,17 @@ class FileStorageTests(TestCase):
             self.assertTrue(file_blob.exists())
             self.assertTrue(isinstance(file_blob, storage.Blob))
 
+    def test_storage_service_saves_xlsx(self):
+        storage_service = FileStorageService()
+        upload_name = 'okce-mock.xlsx'
+        path = os.path.join(settings.MOCK_FILE_LOCATION, upload_name)
+
+        with open(path, 'rb') as file:
+            file_bytes = file.read()
+            file_blob = storage_service.store_file(file_bytes, upload_name, 'reok')
+            self.assertTrue(file_blob.exists())
+            self.assertTrue(isinstance(file_blob, storage.Blob))
+
     def test_gets_reader(self):
         storage_service = FileStorageService()
         stream_reader = storage_service.stream_reader('intx')
