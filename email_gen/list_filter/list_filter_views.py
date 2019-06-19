@@ -20,6 +20,8 @@ def download_form(request, file_id):
     licensee_model = getattr(models, licensee_model_name)
     f = form_class(request.GET, queryset=licensee_model.objects.all())
 
+    # Checks for query parameters. We don't want to run a query against
+    # the database unless there are query parameters present.
     if bool(request.GET):
         # Create CSV response with file name from user input
         download_name = request.GET['filename']
