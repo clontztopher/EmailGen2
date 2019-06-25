@@ -1,15 +1,8 @@
-eg2/settings
-list_mocks
-settings.py
-email_gen/uploads/*
-cloud_sql_proxy
-cloud_sql_proxy_start.sh
-**.csv
 env
-csre-email-gen-8f388bb559a0.json
+list_mocks
+**.csv
 node_modules
-email_gen/list_upload/upload_tests/**.txt
-public
+static_collected
 *.pem
 *.sh
 

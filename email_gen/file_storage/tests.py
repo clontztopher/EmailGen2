@@ -10,7 +10,7 @@ class FileStorageTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         storage_client = storage.Client()
-        cls.bucket = storage_client.get_bucket(settings.SOURCE_LIST_STORAGE_BUCKET_NAME)
+        cls.bucket = storage_client.get_bucket('csre-email-gen.appspot.com')
 
     def test_storage_service_creates_blob(self):
         storage_service = FileStorageService()

@@ -1,7 +1,6 @@
-import io, os, csv
+import io, os
 import pandas as pd
 from google.cloud import storage
-from django.conf import settings
 
 
 class FileStorageService:
@@ -11,10 +10,10 @@ class FileStorageService:
 
     def __init__(self):
         # Set path for saving/retrieving file
-        self.source_path = settings.SOURCES_PATH
+        self.source_path = '/sources/'
         # Create a storage client and get the bucket
         storage_client = storage.Client()
-        bucket_name = settings.SOURCE_LIST_STORAGE_BUCKET_NAME
+        bucket_name = 'csre-email-gen.appspot.com'
         self.bucket = storage_client.get_bucket(bucket_name)
 
     def get_or_create_blob(self, storage_id) -> storage.Blob:

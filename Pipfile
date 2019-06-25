@@ -17,6 +17,7 @@ psycopg2-binary = "*"
 nameparser = "*"
 google-cloud-storage = "*"
 xlrd = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.7"
