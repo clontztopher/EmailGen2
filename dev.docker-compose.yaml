@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: gcr.io/cloudsql-docker/gce-proxy:1.12
+    volumes:
+      - ./env/dev/csre-utilities-proxy-a667bba7300a.json:/config
+    ports:
+      - "127.0.0.1:5432:5432"
+    command: ["/cloud_sql_proxy", "-instances=csre-utilities:us-central1:csre-utils-postgres=tcp:0.0.0.0:5432", "-credential_file=/config"]
+
+  web:
+    build:
+      context: .
+      dockerfile: dev.dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db

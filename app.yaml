@@ -1,0 +1,11 @@
+# [START runtime]
+runtime: python37
+entrypoint: gunicorn -b :$PORT settings.wsgi
+instance_class: F2
+threadsafe: yes
+handlers:
+  - url: /static
+    static_dir: static_collected/
+  - url: /.*
+    script: auto
+# [END runtime]

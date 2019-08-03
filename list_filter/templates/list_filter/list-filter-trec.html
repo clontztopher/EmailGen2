@@ -1,0 +1,118 @@
+{% extends 'template.html' %}
+
+{% load static %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock custom_css %}
+
+{% block custom_scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{% static 'list_filter/js/filter-form.js' %}"></script>
+{% endblock custom_scripts %}
+
+{% block content %}
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="h3 mb-2 text-gray-800">
+                {{ source_instance.display_name }}
+            </h1>
+            <span class="badge badge-primary">
+                {{ source_instance.update_date }}
+            </span>
+            <small> - UPLOADED</small>
+        </div>
+    </div>
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-text">
+                        <form action="" method="get" id="download-form">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label for="filename">File Name</label>
+                                        <input type="text" id="filename" name="filename" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-7 form-group">
+                                        <label for="{{ form.exp_date_range.id_for_label }}">
+                                            Expiration Date Range
+                                        </label>
+                                        {{ form.exp_date_range }}
+                                    </div>
+                                    <div class="col-md-5 form-group">
+                                        <label for="{{ form.exp_date_indie.id_for_label }}">
+                                            Exp Dates - Individual
+                                        </label>
+                                        {{ form.exp_date_indie }}
+                                        <span class="help-block"><small>YYYY-MM-DD comma-separated</small></span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label for="{{ form.lic_type.id_for_label }}">License Type</label>
+                                        {{ form.lic_type }}
+                                    </div>
+                                    <div class="col form-group">
+                                        <label for="{{ form.lic_status.id_for_label }}">License Status</label>
+                                        {{ form.lic_status }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label for="{{ form.sae_status.id_for_label }}">SAE Status</label>
+                                        {{ form.sae_status }}
+                                    </div>
+                                    <div class="col form-group">
+                                        <label for="{{ form.ce_status.id_for_label }}">CE Status</label>
+                                        {{ form.ce_status }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label for="{{ form.trec_county.id_for_label }}">County</label>
+                                        {{ form.trec_county }}
+                                    </div>
+                                    <div class="col form-group">
+                                        <label for="{{ form.trec_region.id_for_label }}">Region</label>
+                                        {{ form.trec_region }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col form-group">
+                                        <label for="{{ form.include_domains.id_for_label }}">
+                                            Include Email Domains
+                                        </label>
+                                        {{ form.include_domains }}
+                                    </div>
+                                    <div class="col form-group">
+                                        <label for="{{ form.exclude_domains.id_for_label }}">
+                                            Exclude Email Domains
+                                        </label>
+                                        {{ form.exclude_domains }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <button type="submit" class="btn btn-success btn-icon-split">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-cog"></i>
+                                        </span>
+                                            <span class="text">Submit</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
